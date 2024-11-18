@@ -1,0 +1,17 @@
+type token =
+    SEMI
+  | RPAR
+  | PRINT
+  | MAIN
+  | LPAR
+  | INT of int
+  | IDENT of string
+  | EOF
+  | END
+  | BEGIN
+val menhir_begin_marker : int
+val xv_program : Kawa.program
+val xv_list_instruction_ : Kawa.seq
+val xv_instruction : Kawa.instr
+val xv_expression : Kawa.expr
+val menhir_end_marker : int
