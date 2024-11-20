@@ -14,6 +14,7 @@ type token =
   | RPAR
   | RETURN
   | PRINT
+  | POW
   | PLUS
   | OR
   | NOT

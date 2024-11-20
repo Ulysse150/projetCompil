@@ -17,6 +17,16 @@ let exec_prog (p: program): unit =
   let env = Hashtbl.create 16 in
   List.iter (fun (x, _) -> Hashtbl.add env x Null) p.globals;
   
+  let rec pow a n = 
+    match n with
+    | 0 -> 1
+    | 1 -> a
+    | b when b < 0 -> failwith"Puissance negative impossible seuls entiers geres"
+    | _ -> match n mod 2 with
+      | 0 -> pow (a*a) (n/2)
+      | 1 -> a*pow a (n - 1);
+      | n -> failwith"Impossible";
+  in
   let rec eval_call f this args =
     failwith "eval_call not implemented"
 
@@ -33,26 +43,32 @@ let exec_prog (p: program): unit =
         
     and eval (e: expr): value = match e with
       | Int n  -> VInt n
-      | Binop(Add, e1 ,e2) ->
-        VInt( evali e1 +  evali e2)
-
-      | Binop(Add, e1 ,e2) ->
-        VInt( evali e1 +  evali e2)
-
-      |  Binop(Sub, e1 ,e2) ->
-        VInt( evali e1 -  evali e2)
-
+      
       |   Binop(Mul, e1 ,e2) ->
         VInt( evali e1 *  evali e2)
 
       | Binop(Div, e1 ,e2) ->
         VInt( evali e1 /  evali e2)
 
+      |Binop(Pow, e1, e2) -> 
+        VInt(pow (evali e1) (evali e2))
+        
+        | Binop(Add, e1 ,e2) ->
+          VInt( evali e1 +  evali e2)
+  
+        |  Binop(Sub, e1 ,e2) ->
+          VInt( evali e1 -  evali e2)
+  
+
+      | Unop(Opp, e)-> VInt(-evali e)
+
       | _ -> failwith "case not implemented in eval"
     
 
     in
   
+
+
 
 
     let rec exec (i: instr): unit = match i with

@@ -39,9 +39,12 @@
 %token VOID
 %token VIRG
 %token DOT
+%token POW
 
 %left PLUS MINUS
 %left STAR DIV
+%left POW
+
 %start program
 %type <Kawa.program> program
 
@@ -77,9 +80,9 @@ uop:
 | MINUS{Opp}
 | NOT{Not}
 ;
-bop:
+%inline bop:
 | PLUS{Add}  |   MOD{Mod}  | INFEQ{Infeq} | OR{Or}
-| MINUS{Sub} |   DEQ{Eq}   | SUP{Sup}
+| MINUS{Sub} |   DEQ{Eq}   | SUP{Sup}     | POW{Pow}
 | STAR{Mul}  |   DIFF{Neq} | SUPEQ{Supeq}
 | DIV{Div}   |   INF{Inf}  | AND{And}
 ;

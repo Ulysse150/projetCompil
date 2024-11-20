@@ -50,12 +50,11 @@ rule token = parse
   | "{"  { BEGIN }
   | "}"  { END }
   
-  
+  |"*"{STAR}
+  |"/"{DIV}
   |"="{EQ}
   |"+"{PLUS}
   |"-"{MINUS}
-  |"*"{STAR}
-  |"/"{DIV}
   |"=="{DEQ}
   |"!="{DIFF}
   |"<"{INF}
@@ -68,6 +67,7 @@ rule token = parse
   |"%" {MOD}
   |"," {VIRG}
   |"." {DOT}
+  |"^"{POW}
   | _    { raise (Error ("unknown character : " ^ lexeme lexbuf)) }
   | eof  { EOF }
 
