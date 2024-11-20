@@ -20,7 +20,7 @@
 %token PLUS
 %token MINUS
 %token STAR
-%token DIVIDE
+%token DIV
 %token DEQ
 %token DIFF
 %token INF
@@ -31,6 +31,17 @@
 %token SUPEQ
 %token NOT
 %token MOD
+%token ATT
+%token METH
+%token CLASS
+%token NEW
+%token THIS
+%token VOID
+%token VIRG
+%token DOT
+
+%left PLUS MINUS
+%left STAR DIV
 %start program
 %type <Kawa.program> program
 
@@ -43,13 +54,32 @@ program:
 
 instruction:
 | PRINT LPAR e=expression RPAR SEMI { Print(e) }
-| IF LPAR e1=expression RPAR ELSE e2=expression
+
+typ: 
+| INT{TInt}
+| BOOL{TBool}
+| VOID{TVoid}
+| id=IDENT{TClass(id)}
+
 
 ;
 
 expression:
 | n=INT { Int(n) }
+| op=uop e=expression{Unop(op, e )}
+| e1 = expression op = bop e2 = expression{Binop(op, e1, e2)}
+| LPAR e = expression RPAR {e}
 
 ;
 
 
+uop:
+| MINUS{Opp}
+| NOT{Not}
+;
+bop:
+| PLUS{Add}  |   MOD{Mod}  | INFEQ{Infeq} | OR{Or}
+| MINUS{Sub} |   DEQ{Eq}   | SUP{Sup}
+| STAR{Mul}  |   DIFF{Neq} | SUPEQ{Supeq}
+| DIV{Div}   |   INF{Inf}  | AND{And}
+;

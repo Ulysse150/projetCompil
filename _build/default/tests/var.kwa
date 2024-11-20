@@ -2,7 +2,7 @@ var int x;
 var int y;
 
 main {
-  x = 1;
+  x = 4;
   y = 6;
   x = x+2;
   y = y*(x+4);

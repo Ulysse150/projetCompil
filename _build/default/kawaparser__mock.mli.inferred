@@ -1,17 +1,48 @@
 type token =
-    SEMI
+    WHILE
+  | VOID
+  | VIRG
+  | VAR
+  | THIS
+  | SUPEQ
+  | SUP
+  | STAR
+  | SEMI
   | RPAR
+  | RETURN
   | PRINT
+  | PLUS
+  | OR
+  | NOT
+  | NEW
+  | MOD
+  | MINUS
+  | METH
   | MAIN
   | LPAR
   | INT of int
+  | INFEQ
+  | INF
+  | IF
   | IDENT of string
+  | EQ
   | EOF
   | END
+  | ELSE
+  | DOT
+  | DIV
+  | DIFF
+  | DEQ
+  | CLASS
+  | BOOL of bool
   | BEGIN
+  | ATT
+  | AND
 val menhir_begin_marker : int
+val xv_uop : Kawa.unop
 val xv_program : Kawa.program
 val xv_list_instruction_ : Kawa.seq
 val xv_instruction : Kawa.instr
 val xv_expression : Kawa.expr
+val xv_bop : Kawa.binop
 val menhir_end_marker : int

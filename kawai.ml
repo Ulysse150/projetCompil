@@ -14,6 +14,7 @@ let () =
   let lb = Lexing.from_channel c in
   try
     let prog = Kawaparser.program Kawalexer.token lb in
+    
     close_in c;
     (* Typechecker.typecheck_prog prog; *)
     Interpreter.exec_prog prog;

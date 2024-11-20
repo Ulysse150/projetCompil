@@ -14,7 +14,12 @@
       "else",     ELSE;
       "var",      VAR;
       "return",   RETURN;
-      ""
+      "attribute", ATT;
+      "method",    METH;
+      "class",      CLASS;
+      "new",       NEW;
+      "this",     THIS;
+      "void",     VOID;
     ] ;
   fun s ->
     try  Hashtbl.find h s
@@ -50,7 +55,7 @@ rule token = parse
   |"+"{PLUS}
   |"-"{MINUS}
   |"*"{STAR}
-  |"/"{DIVIDE}
+  |"/"{DIV}
   |"=="{DEQ}
   |"!="{DIFF}
   |"<"{INF}
@@ -61,7 +66,8 @@ rule token = parse
   |">="{SUPEQ}
   |"!"{NOT}
   |"%" {MOD}
-
+  |"," {VIRG}
+  |"." {DOT}
   | _    { raise (Error ("unknown character : " ^ lexeme lexbuf)) }
   | eof  { EOF }
 

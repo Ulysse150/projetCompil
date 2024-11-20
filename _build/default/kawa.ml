@@ -17,8 +17,8 @@ let typ_to_string = function
   | TClass c -> c
 
 type unop  = Opp | Not
-type binop = Add | Sub | Mul | Div | Rem
-           | Lt  | Le  | Gt | Ge | Eq  | Neq
+type binop = Add | Sub | Mul | Div | Mod
+           | Inf | Infeq  | Sup | Supeq | Eq  | Neq
            | And | Or
 
 (* Expressions *)
