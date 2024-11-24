@@ -6,6 +6,7 @@ type token =
   | VOID
   | VIRG
   | VAR
+  | TRUE
   | THIS
   | SUPEQ
   | SUP
@@ -29,6 +30,7 @@ type token =
   | INF
   | IF
   | IDENT of (string)
+  | FALSE
   | EQ
   | EOF
   | END

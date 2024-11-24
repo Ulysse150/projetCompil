@@ -8,6 +8,8 @@
 %token <int> INT
 %token <string> IDENT
 %token <bool> BOOL
+%token TRUE
+%token FALSE
 %token MAIN
 %token LPAR RPAR BEGIN END SEMI
 %token PRINT
@@ -71,6 +73,8 @@ typ:
 
 expression:
 | n=INT { Int(n) }
+| TRUE{Bool(true)}
+| FALSE{Bool(false)}
 | op=uop e=expression{Unop(op, e )}
 | e1 = expression op = bop e2 = expression{Binop(op, e1, e2)}
 | MINUS n=INT {Int(-n)}

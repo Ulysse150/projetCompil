@@ -13,11 +13,49 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /home/raphael/.opam/4.14.2/bin/ocamlc.opt -config > /tmp/dune_f0c7bb_output
+$ /home/raphael/.opam/4.14.2/bin/ocamlc.opt -config > /tmp/dune_d6cca9_output
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/menhir --explain --dump kawaparser.mly --base kawaparser --infer-write-query kawaparser__mock.ml.mock)
+> File "kawaparser.mly", line 36, characters 7-10:
+> Warning: the token ATT is unused.
+> File "kawaparser.mly", line 38, characters 7-12:
+> Warning: the token CLASS is unused.
+> File "kawaparser.mly", line 43, characters 7-10:
+> Warning: the token DOT is unused.
+> File "kawaparser.mly", line 17, characters 10-14:
+> Warning: the token ELSE is unused.
+> File "kawaparser.mly", line 21, characters 7-9:
+> Warning: the token EQ is unused.
+> File "kawaparser.mly", line 17, characters 7-9:
+> Warning: the token IF is unused.
+> File "kawaparser.mly", line 37, characters 7-11:
+> Warning: the token METH is unused.
+> File "kawaparser.mly", line 39, characters 7-10:
+> Warning: the token NEW is unused.
+> File "kawaparser.mly", line 19, characters 7-13:
+> Warning: the token RETURN is unused.
+> File "kawaparser.mly", line 40, characters 7-11:
+> Warning: the token THIS is unused.
+> File "kawaparser.mly", line 20, characters 7-10:
+> Warning: the token VAR is unused.
+> File "kawaparser.mly", line 42, characters 7-11:
+> Warning: the token VIRG is unused.
+> File "kawaparser.mly", line 18, characters 7-12:
+> Warning: the token WHILE is unused.
+> File "kawaparser.mly", line 65, characters 0-3:
+> Warning: symbol typ is unreachable from any of the start symbol(s).
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamllex -q -o kawalexer.ml kawalexer.mll)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamldep.opt -modules -impl kawalexer.ml) > _build/default/.kawai.eobjs/dune__exe__Kawalexer.impl.d
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamldep.opt -modules -impl kawaparser__mock.ml.mock) > _build/default/.kawai.eobjs/kawaparser__mock.impl.d
+$ (cd _build/.sandbox/9bccbb5594cda4789d5a44f932ada0e2/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -I .kawai.eobjs/byte -open Dune__exe -short-paths -i -impl kawaparser__mock.ml.mock) > _build/.sandbox/9bccbb5594cda4789d5a44f932ada0e2/default/kawaparser__mock.mli.inferred
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/menhir --explain --dump kawaparser.mly --base kawaparser --infer-read-reply kawaparser__mock.mli.inferred)
+> Warning: 16 states have shift/reduce conflicts.
+> Warning: 186 shift/reduce conflicts were arbitrarily resolved.
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamldep.opt -modules -intf kawaparser.mli) > _build/default/.kawai.eobjs/dune__exe__Kawaparser.intf.d
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamldep.opt -modules -impl kawaparser.ml) > _build/default/.kawai.eobjs/dune__exe__Kawaparser.impl.d
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -bin-annot -I .kawai.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/byte/dune__exe__Kawaparser.cmi -c -intf kawaparser.mli)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -bin-annot -I .kawai.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/byte/dune__exe__Kawalexer.cmo -c -impl kawalexer.ml)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -I .kawai.eobjs/byte -I .kawai.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/native/dune__exe__Kawalexer.cmx -c -impl kawalexer.ml)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -I .kawai.eobjs/byte -I .kawai.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/native/dune__exe__Kawaparser.cmx -c -impl kawaparser.ml)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -bin-annot -I .kawai.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/byte/dune__exe__Kawai.cmo -c -impl kawai.ml)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -I .kawai.eobjs/byte -I .kawai.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/native/dune__exe__Kawai.cmx -c -impl kawai.ml)
 $ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -o kawai.exe .kawai.eobjs/native/dune__exe.cmx .kawai.eobjs/native/dune__exe__Kawa.cmx .kawai.eobjs/native/dune__exe__Interpreter.cmx .kawai.eobjs/native/dune__exe__Kawaparser.cmx .kawai.eobjs/native/dune__exe__Kawalexer.cmx .kawai.eobjs/native/dune__exe__Typechecker.cmx .kawai.eobjs/native/dune__exe__Kawai.cmx)

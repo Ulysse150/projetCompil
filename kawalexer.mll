@@ -19,7 +19,9 @@
       "class",      CLASS;
       "new",       NEW;
       "this",     THIS;
-      "void",     VOID
+      "void",     VOID;
+      "true", TRUE;
+      "false", FALSE
     ] ;
   fun s ->
     try  Hashtbl.find h s
