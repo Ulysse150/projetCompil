@@ -16,10 +16,32 @@ let typ_to_string = function
   | TBool    -> "bool"
   | TClass c -> c
 
+
+
+
 type unop  = Opp | Not
 type binop = Add | Sub | Mul | Div | Mod
            | Inf | Infeq  | Sup | Supeq | Eq  | Neq
            | And | Or  | Pow
+
+           
+let binop_to_string  = 
+  function 
+  | Add -> "+"
+  | Sub -> "-"
+  | Mul -> "*"
+  | Div -> "/"
+  | Mod -> "%"
+  | Inf -> "<"
+  | Infeq-> "<="
+  | Sup -> ">"
+  | Supeq->">="
+  | Eq -> "=="
+  | Neq -> "!="
+  | And -> "&&"
+  | Or -> "||"
+  | Pow -> "^"
+
 
 (* Expressions *)
 type expr =

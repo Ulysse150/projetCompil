@@ -2,7 +2,7 @@
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Shared cache location: /home/raphael/.cache/dune/db
-# Workspace root: /mnt/c/Users/rapha/Documents/LDD3/S5/Compilation/projet
+# Workspace root: /mnt/c/Users/rapha/Documents/LDD3/S5/Compilation/projetCompil
 # Auto-detected concurrency: 2
 # Dune context:
 #  { name = "default"
@@ -13,4 +13,12 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /home/raphael/.opam/4.14.2/bin/ocamlc.opt -config > /tmp/dune_6f59d1_output
+$ /home/raphael/.opam/4.14.2/bin/ocamlc.opt -config > /tmp/dune_f0c7bb_output
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamllex -q -o kawalexer.ml kawalexer.mll)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamldep.opt -modules -impl kawalexer.ml) > _build/default/.kawai.eobjs/dune__exe__Kawalexer.impl.d
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -bin-annot -I .kawai.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/byte/dune__exe__Kawalexer.cmo -c -impl kawalexer.ml)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -I .kawai.eobjs/byte -I .kawai.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/native/dune__exe__Kawalexer.cmx -c -impl kawalexer.ml)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlc.opt -g -bin-annot -I .kawai.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/byte/dune__exe__Kawai.cmo -c -impl kawai.ml)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -I .kawai.eobjs/byte -I .kawai.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .kawai.eobjs/native/dune__exe__Kawai.cmx -c -impl kawai.ml)
+$ (cd _build/default && /home/raphael/.opam/4.14.2/bin/ocamlopt.opt -g -o kawai.exe .kawai.eobjs/native/dune__exe.cmx .kawai.eobjs/native/dune__exe__Kawa.cmx .kawai.eobjs/native/dune__exe__Interpreter.cmx .kawai.eobjs/native/dune__exe__Kawaparser.cmx .kawai.eobjs/native/dune__exe__Kawalexer.cmx .kawai.eobjs/native/dune__exe__Typechecker.cmx .kawai.eobjs/native/dune__exe__Kawai.cmx)
+# Promoting "_build/default/kawai.exe" to "kawai.exe"

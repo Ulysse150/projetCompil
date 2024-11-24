@@ -43,7 +43,7 @@ let exec_prog (p: program): unit =
         
     and eval (e: expr): value = match e with
       | Int n  -> VInt n
-      
+
       |   Binop(Mul, e1 ,e2) ->
         VInt( evali e1 *  evali e2)
 
@@ -58,7 +58,7 @@ let exec_prog (p: program): unit =
   
         |  Binop(Sub, e1 ,e2) ->
           VInt( evali e1 -  evali e2)
-  
+
 
       | Unop(Opp, e)-> VInt(-evali e)
 
@@ -74,6 +74,7 @@ let exec_prog (p: program): unit =
     let rec exec (i: instr): unit = match i with
       | Print e -> Printf.printf "%d\n" (evali e)
       | _ -> failwith "case not implemented in exec"
+
     and exec_seq s = 
       List.iter exec s
     in

@@ -13,11 +13,16 @@ let () =
   let c  = open_in file in
   let lb = Lexing.from_channel c in
   try
+      Printf.printf"Lexing et parsing du fichier...\n";
     let prog = Kawaparser.program Kawalexer.token lb in
-    
+    Printf.printf"Lexing et parsing du fichier effectués avec succès\n" ;
     close_in c;
-    (* Typechecker.typecheck_prog prog; *)
+    Printf.printf"Typechecking du programme...\n";
+    Typechecker.typecheck_prog prog;
+    Printf.printf"Typechecking du programme effectue avec succes\n";
+    Printf.printf"Execution du programme...\n";
     Interpreter.exec_prog prog;
+    Printf.printf"Programme execute avec succes...\n";
     exit 0
   with
   | Kawalexer.Error s ->

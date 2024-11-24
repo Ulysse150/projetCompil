@@ -58,6 +58,8 @@ program:
 instruction:
 | PRINT LPAR e=expression RPAR SEMI { Print(e) }
 
+
+
 typ: 
 | INT{TInt}
 | BOOL{TBool}
@@ -71,6 +73,7 @@ expression:
 | n=INT { Int(n) }
 | op=uop e=expression{Unop(op, e )}
 | e1 = expression op = bop e2 = expression{Binop(op, e1, e2)}
+| MINUS n=INT {Int(-n)}
 | LPAR e = expression RPAR {e}
 
 ;
