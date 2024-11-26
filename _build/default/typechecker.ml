@@ -42,19 +42,32 @@ let typecheck_prog p =
 
   and type_binop op e1 e2 tenv= 
     match op with 
-    | Add | Sub | Mul | Div | Mod | Pow -> 
+    | Add | Sub | Mul | Div | Mod | Pow | Sup | Supeq | Inf|Infeq -> 
         let t1 = type_expr e1 tenv in 
         let t2 = type_expr e2 tenv in 
         if (t1 = TInt && t2 = TInt) then TInt else 
           operator_error (binop_to_string op) (typ_to_string t1) (typ_to_string t2)
+
+    | And |  Or -> let t1 = type_expr e1 tenv in 
+      let t2 = type_expr e2 tenv in 
+      if (t1 = TBool && t2 = TBool) then TBool else 
+      operator_error (binop_to_string op) (typ_to_string t1) (typ_to_string t2) 
     | _ -> failwith"case not implemented yet"
 
   in
 
+  
+
+  let checkSet m e tenv = 
+    ()
+
+  in
 
 
   let rec check_instr i ret tenv = match i with
     | Print e -> check e TInt tenv
+    | Set(m, e) -> checkSet m e tenv
+
     | _ -> failwith "case not implemented in check_instr"
   and check_seq s ret tenv =
     List.iter (fun i -> check_instr i ret tenv) s

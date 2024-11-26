@@ -1,10 +1,23 @@
-var int x;
 var int y;
+var int x;
+var bool b1;
+var bool b2;
+var bool b3;
+var int a;
+var int b;
+var int c;
 
 main {
-  x = 4;
-  y = 6;
-  x = x+2;
-  y = y*(x+4);
+  
+  b1 = true && true;
+  b2 = false || false;
+  x = 4 ;
+  
+  y = 1;
+  b3 = ( x <  5) && (y == 1);
+
+  y = y + x;
+  x = x^3;
   print(y);
+
 }

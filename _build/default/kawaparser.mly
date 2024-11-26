@@ -42,6 +42,8 @@
 %token VIRG
 %token DOT
 %token POW
+%token VARINT
+%token VARBOOL
 
 %left PLUS MINUS
 %left STAR DIV
@@ -53,23 +55,31 @@
 %%
 
 program:
-| MAIN BEGIN main=list(instruction) END EOF
-    { {classes=[]; globals=[]; main} }
+|variables=list(var_decl) MAIN BEGIN main=list(instruction) END EOF
+    { {classes=[]; globals = variables; main} }
 ;
 
 instruction:
 | PRINT LPAR e=expression RPAR SEMI { Print(e) }
+| m=mem EQ e=expression SEMI{Set(m , e)}
 
+;
+
+mem:
+| id =IDENT{Var(id)}
+
+;
 
 
 typ: 
-| INT{TInt}
-| BOOL{TBool}
+| VARINT{TInt}
+| VARBOOL{TBool}
 | VOID{TVoid}
 | id=IDENT{TClass(id)}
-
-
 ;
+
+var_decl: 
+| VAR t=typ id=IDENT SEMI{(id,t) } ;
 
 expression:
 | n=INT { Int(n) }
@@ -79,6 +89,7 @@ expression:
 | e1 = expression op = bop e2 = expression{Binop(op, e1, e2)}
 | MINUS n=INT {Int(-n)}
 | LPAR e = expression RPAR {e}
+| id = IDENT{Get(Var(id))}
 
 ;
 
@@ -87,6 +98,8 @@ uop:
 | MINUS{Opp}
 | NOT{Not}
 ;
+
+
 %inline bop:
 | PLUS{Add}  |   MOD{Mod}  | INFEQ{Infeq} | OR{Or}
 | MINUS{Sub} |   DEQ{Eq}   | SUP{Sup}     | POW{Pow}

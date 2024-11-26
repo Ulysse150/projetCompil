@@ -21,7 +21,9 @@
       "this",     THIS;
       "void",     VOID;
       "true", TRUE;
-      "false", FALSE
+      "false", FALSE;
+      "int", VARINT;
+      "bool", VARBOOL
     ] ;
   fun s ->
     try  Hashtbl.find h s
@@ -33,7 +35,7 @@ let digit = ['0'-'9']
 let number = digit+
 let alpha = ['a'-'z' 'A'-'Z']
 let ident = ['a'-'z' '_'] (alpha | '_' | digit)*
-let bool = ("true"|"false")
+
 
 rule token = parse
   | ['\n']            { new_line lexbuf; token lexbuf }
@@ -44,7 +46,7 @@ rule token = parse
 
   | number as n  { INT(int_of_string n) }
   | ident as id  { keyword_or_ident id }
-  | bool as b { BOOL(bool_of_string b )}
+
 
   | ";"  { SEMI }
   | "("  { LPAR }

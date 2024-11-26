@@ -5,6 +5,8 @@ type token =
   | WHILE
   | VOID
   | VIRG
+  | VARINT
+  | VARBOOL
   | VAR
   | TRUE
   | THIS

@@ -65,6 +65,12 @@ and mem_access =
   | Var   of string
   | Field of expr (* objet *) * string (* nom d'un attribut *)
 
+let mem_access_string  =
+  function
+  | Var v -> v
+  | Field(e, s) -> ""
+
+
 (* Instructions *)
 type instr =
   (* Affichage d'un entier *)
