@@ -125,17 +125,30 @@ let exec_prog (p: program): unit =
       Hashtbl.replace env name (t, eval e);
     in
 
+
     let rec exec (i: instr): unit = match i with
       | Print e -> Printf.printf "%d\n" (evali e)
       | Set(m, e)-> exec_set m e;
         (*On suppose que le typechecker est passe*)
         (*Donc la variable m existe et le type passe dans e est bon*)
 
-          ()      
+          () 
+      | If(cond, b1, b2) -> (
+        match evalb cond with 
+        | true -> exec_seq b1 ;
+        | false -> exec_seq b2; )
+
+      | While(cond, block) -> execWhile cond block
+
       | _ -> failwith "case not implemented in exec"
 
     and exec_seq s = 
       List.iter exec s
+    
+    and execWhile cond block  =
+      match evalb cond with 
+      | true -> exec_seq block; execWhile cond block 
+      | false -> ()
     in
 
     exec_seq s

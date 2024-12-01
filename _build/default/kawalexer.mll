@@ -23,7 +23,8 @@
       "true", TRUE;
       "false", FALSE;
       "int", VARINT;
-      "bool", VARBOOL
+      "bool", VARBOOL;
+      "while", WHILE
     ] ;
   fun s ->
     try  Hashtbl.find h s

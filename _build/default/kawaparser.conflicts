@@ -1,0 +1,56 @@
+
+** Conflict (shift/reduce) in state 26.
+** Tokens involved: SUPEQ SUP STAR POW PLUS OR MOD MINUS INFEQ INF DIV DIFF DEQ AND
+** The following explanations concentrate on token SUPEQ.
+** This state is reached from program after reading:
+
+list(var_decl) MAIN BEGIN WHILE LPAR uop expression
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+list(var_decl) MAIN BEGIN list(instruction) END EOF 
+                          instruction list(instruction) 
+                          WHILE LPAR expression RPAR BEGIN list(instruction) END 
+                                     (?)
+
+** In state 26, looking ahead at SUPEQ, reducing production
+** expression -> uop expression
+** is permitted because of the following sub-derivation:
+
+expression SUPEQ expression // lookahead token appears
+uop expression . 
+
+** In state 26, looking ahead at SUPEQ, shifting is permitted
+** because of the following sub-derivation:
+
+uop expression 
+    expression . SUPEQ expression 
+
+** Conflict (shift/reduce) in state 19.
+** Token involved: INT
+** This state is reached from program after reading:
+
+list(var_decl) MAIN BEGIN WHILE LPAR MINUS
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+program 
+list(var_decl) MAIN BEGIN list(instruction) END EOF 
+                          instruction list(instruction) 
+                          WHILE LPAR expression RPAR BEGIN list(instruction) END 
+                                     (?)
+
+** In state 19, looking ahead at INT, shifting is permitted
+** because of the following sub-derivation:
+
+MINUS . INT 
+
+** In state 19, looking ahead at INT, reducing production
+** uop -> MINUS
+** is permitted because of the following sub-derivation:
+
+uop expression // lookahead token appears because expression can begin with INT
+MINUS . 

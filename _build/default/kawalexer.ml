@@ -24,14 +24,15 @@
       "true", TRUE;
       "false", FALSE;
       "int", VARINT;
-      "bool", VARBOOL
+      "bool", VARBOOL;
+      "while", WHILE
     ] ;
   fun s ->
     try  Hashtbl.find h s
     with Not_found -> IDENT(s)
         
 
-# 35 "kawalexer.ml"
+# 36 "kawalexer.ml"
 let __ocaml_lex_tables = {
   Lexing.lex_base =
    "\000\000\225\255\226\255\227\255\228\255\229\255\230\255\002\000\
@@ -161,169 +162,169 @@ let rec token lexbuf =
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 41 "kawalexer.mll"
+# 42 "kawalexer.mll"
                       ( new_line lexbuf; token lexbuf )
-# 167 "kawalexer.ml"
+# 168 "kawalexer.ml"
 
   | 1 ->
-# 42 "kawalexer.mll"
+# 43 "kawalexer.mll"
                       ( token lexbuf )
-# 172 "kawalexer.ml"
+# 173 "kawalexer.ml"
 
   | 2 ->
-# 44 "kawalexer.mll"
+# 45 "kawalexer.mll"
                          ( new_line lexbuf; token lexbuf )
-# 177 "kawalexer.ml"
+# 178 "kawalexer.ml"
 
   | 3 ->
-# 45 "kawalexer.mll"
+# 46 "kawalexer.mll"
                          ( comment lexbuf; token lexbuf )
-# 182 "kawalexer.ml"
+# 183 "kawalexer.ml"
 
   | 4 ->
 let
-# 47 "kawalexer.mll"
+# 48 "kawalexer.mll"
               n
-# 188 "kawalexer.ml"
+# 189 "kawalexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 47 "kawalexer.mll"
+# 48 "kawalexer.mll"
                  ( INT(int_of_string n) )
-# 192 "kawalexer.ml"
+# 193 "kawalexer.ml"
 
   | 5 ->
 let
-# 48 "kawalexer.mll"
+# 49 "kawalexer.mll"
              id
-# 198 "kawalexer.ml"
+# 199 "kawalexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 48 "kawalexer.mll"
+# 49 "kawalexer.mll"
                  ( keyword_or_ident id )
-# 202 "kawalexer.ml"
+# 203 "kawalexer.ml"
 
   | 6 ->
-# 51 "kawalexer.mll"
+# 52 "kawalexer.mll"
          ( SEMI )
-# 207 "kawalexer.ml"
+# 208 "kawalexer.ml"
 
   | 7 ->
-# 52 "kawalexer.mll"
+# 53 "kawalexer.mll"
          ( LPAR )
-# 212 "kawalexer.ml"
+# 213 "kawalexer.ml"
 
   | 8 ->
-# 53 "kawalexer.mll"
+# 54 "kawalexer.mll"
          ( RPAR )
-# 217 "kawalexer.ml"
+# 218 "kawalexer.ml"
 
   | 9 ->
-# 54 "kawalexer.mll"
+# 55 "kawalexer.mll"
          ( BEGIN )
-# 222 "kawalexer.ml"
+# 223 "kawalexer.ml"
 
   | 10 ->
-# 55 "kawalexer.mll"
+# 56 "kawalexer.mll"
          ( END )
-# 227 "kawalexer.ml"
+# 228 "kawalexer.ml"
 
   | 11 ->
-# 57 "kawalexer.mll"
+# 58 "kawalexer.mll"
       (STAR)
-# 232 "kawalexer.ml"
+# 233 "kawalexer.ml"
 
   | 12 ->
-# 58 "kawalexer.mll"
+# 59 "kawalexer.mll"
       (DIV)
-# 237 "kawalexer.ml"
+# 238 "kawalexer.ml"
 
   | 13 ->
-# 59 "kawalexer.mll"
+# 60 "kawalexer.mll"
       (EQ)
-# 242 "kawalexer.ml"
+# 243 "kawalexer.ml"
 
   | 14 ->
-# 60 "kawalexer.mll"
+# 61 "kawalexer.mll"
       (PLUS)
-# 247 "kawalexer.ml"
+# 248 "kawalexer.ml"
 
   | 15 ->
-# 61 "kawalexer.mll"
+# 62 "kawalexer.mll"
       (MINUS)
-# 252 "kawalexer.ml"
+# 253 "kawalexer.ml"
 
   | 16 ->
-# 62 "kawalexer.mll"
+# 63 "kawalexer.mll"
        (DEQ)
-# 257 "kawalexer.ml"
+# 258 "kawalexer.ml"
 
   | 17 ->
-# 63 "kawalexer.mll"
+# 64 "kawalexer.mll"
        (DIFF)
-# 262 "kawalexer.ml"
+# 263 "kawalexer.ml"
 
   | 18 ->
-# 64 "kawalexer.mll"
+# 65 "kawalexer.mll"
       (INF)
-# 267 "kawalexer.ml"
+# 268 "kawalexer.ml"
 
   | 19 ->
-# 65 "kawalexer.mll"
+# 66 "kawalexer.mll"
        (INFEQ)
-# 272 "kawalexer.ml"
+# 273 "kawalexer.ml"
 
   | 20 ->
-# 66 "kawalexer.mll"
+# 67 "kawalexer.mll"
        (AND)
-# 277 "kawalexer.ml"
+# 278 "kawalexer.ml"
 
   | 21 ->
-# 67 "kawalexer.mll"
+# 68 "kawalexer.mll"
        (OR)
-# 282 "kawalexer.ml"
+# 283 "kawalexer.ml"
 
   | 22 ->
-# 68 "kawalexer.mll"
+# 69 "kawalexer.mll"
       (SUP)
-# 287 "kawalexer.ml"
+# 288 "kawalexer.ml"
 
   | 23 ->
-# 69 "kawalexer.mll"
+# 70 "kawalexer.mll"
        (SUPEQ)
-# 292 "kawalexer.ml"
+# 293 "kawalexer.ml"
 
   | 24 ->
-# 70 "kawalexer.mll"
+# 71 "kawalexer.mll"
       (NOT)
-# 297 "kawalexer.ml"
+# 298 "kawalexer.ml"
 
   | 25 ->
-# 71 "kawalexer.mll"
+# 72 "kawalexer.mll"
        (MOD)
-# 302 "kawalexer.ml"
+# 303 "kawalexer.ml"
 
   | 26 ->
-# 72 "kawalexer.mll"
+# 73 "kawalexer.mll"
        (VIRG)
-# 307 "kawalexer.ml"
+# 308 "kawalexer.ml"
 
   | 27 ->
-# 73 "kawalexer.mll"
+# 74 "kawalexer.mll"
        (DOT)
-# 312 "kawalexer.ml"
+# 313 "kawalexer.ml"
 
   | 28 ->
-# 74 "kawalexer.mll"
+# 75 "kawalexer.mll"
       (POW)
-# 317 "kawalexer.ml"
+# 318 "kawalexer.ml"
 
   | 29 ->
-# 75 "kawalexer.mll"
+# 76 "kawalexer.mll"
          ( raise (Error ("unknown character : " ^ lexeme lexbuf)) )
-# 322 "kawalexer.ml"
+# 323 "kawalexer.ml"
 
   | 30 ->
-# 76 "kawalexer.mll"
+# 77 "kawalexer.mll"
          ( EOF )
-# 327 "kawalexer.ml"
+# 328 "kawalexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_token_rec lexbuf __ocaml_lex_state
@@ -333,19 +334,19 @@ and comment lexbuf =
 and __ocaml_lex_comment_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 79 "kawalexer.mll"
+# 80 "kawalexer.mll"
          ( () )
-# 339 "kawalexer.ml"
+# 340 "kawalexer.ml"
 
   | 1 ->
-# 80 "kawalexer.mll"
+# 81 "kawalexer.mll"
          ( comment lexbuf )
-# 344 "kawalexer.ml"
+# 345 "kawalexer.ml"
 
   | 2 ->
-# 81 "kawalexer.mll"
+# 82 "kawalexer.mll"
          ( raise (Error "unterminated comment") )
-# 349 "kawalexer.ml"
+# 350 "kawalexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_comment_rec lexbuf __ocaml_lex_state

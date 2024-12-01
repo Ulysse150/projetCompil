@@ -45,9 +45,18 @@
 %token VARINT
 %token VARBOOL
 
+%left SUP SUPEQ INF INFEQ DEQ DIFF
+
+%left AND OR 
+
 %left PLUS MINUS
+%left MOD
 %left STAR DIV
 %left POW
+
+
+
+
 
 %start program
 %type <Kawa.program> program
@@ -62,6 +71,10 @@ program:
 instruction:
 | PRINT LPAR e=expression RPAR SEMI { Print(e) }
 | m=mem EQ e=expression SEMI{Set(m , e)}
+| IF LPAR cond = expression RPAR BEGIN instructions1 = list(instruction) END
+ ELSE BEGIN instructions2 = list(instruction) END{If(cond, instructions1, instructions2)}
+| WHILE LPAR cond = expression RPAR BEGIN block = list(instruction) END{While(cond, block)}
+
 
 ;
 

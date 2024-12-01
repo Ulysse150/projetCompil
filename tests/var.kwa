@@ -1,23 +1,42 @@
 var int y;
 var int x;
-var bool b1;
-var bool b2;
-var bool b3;
-var int a;
-var int b;
-var int c;
+var int cpt;
+var bool bo;
+
+var bool a;
+var bool b;
+var bool c;
 
 main {
+  a = true;
+  b = false;
+  c = true;
+  cpt = 0;
+  x = 7 ;
+  y = x + x;
+  y = y * x;
+ 
+    bo = (x == 4) && ( (x > 7 )&& ( 8 == 10)) && b;
   
-  b1 = true && true;
-  b2 = false || false;
-  x = 4 ;
-  
-  y = 1;
-  b3 = ( x <  5) && (y == 1);
 
-  y = y + x;
-  x = x^3;
+  if (x == 7){
+    while ( cpt < 7){
+      cpt = cpt +1;
+      print(cpt);
+    }
+
+
+  }else{
+    print(8);
+  }
+
+  
+  bo = x % 2 != 0;
+  
+
   print(y);
+
+ 
+
 
 }
