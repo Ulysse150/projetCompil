@@ -17,6 +17,19 @@ let typ_to_string = function
   | TClass c -> c
 
 
+(*Transforme une liste de (t, [s1,..., sn])
+ou t est le type des variables s1, ..., sn
+pour les variables declarees en serie
+et les transforme en [(s1, t), ... , (sn, t)]
+*)
+
+let transform_decl decls = 
+  let t, l = decls in 
+  List.map (fun s -> (s, t)) l
+
+
+
+
 
 
 type unop  = Opp | Not
@@ -68,7 +81,7 @@ and mem_access =
 let mem_access_string  =
   function
   | Var v -> v
-  | Field(e, s) -> ""
+  | Field(e, s) -> Printf.sprintf"%s"  s
 
 
 (* Instructions *)
@@ -119,6 +132,9 @@ type class_def = {
    d'instructions *)
 type program = {
     classes: class_def list;
-    globals: (string * typ) list;
+    globals: (string * typ ) list;
     main: seq;
   }
+
+
+

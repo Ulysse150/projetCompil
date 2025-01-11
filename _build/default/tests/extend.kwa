@@ -1,7 +1,6 @@
 
-var paire p;
+var int pi;
 var paire pt;
-var triple t;
 
 class paire {
   attribute int x;
@@ -13,20 +12,33 @@ class paire {
   }
 
   method int somme() {
-    return this.x + this.y;
+
+    
+    return this.x + this.y  ;
+    
+
   }
+
+  method void augmente(){
+    this.x = this.x * 2;
+    this.y = 2 * this.y;
+  }
+
 }
 
 class triple extends paire {
   attribute int z;
 
   method void constructor(int x, int y, int z) {
+   
     this.x = x;
     this.y = y;
+    print(4);
     this.z = z;
   }
 
   method int somme() {
+    print(pi);
     return this.x + this.y + this.z;
   }
 
@@ -36,12 +48,12 @@ class triple extends paire {
 }
 
 main {
-  p = new paire(1, 2);
-  t = new triple(3, 4, 5);
-  print(p.somme());
-  print(t.somme());
-  print(t.produit());
+  pi = 7891;
+  
   pt = new triple(1, 2,3);
+
   print(pt.somme());
-  // affiche 3, puis 12, puis 60, puis 6.
+
+ 
+  
 }

@@ -68,7 +68,7 @@ and mem_access =
 let mem_access_string  =
   function
   | Var v -> v
-  | Field(e, s) -> ""
+  | Field(e, s) -> Printf.sprintf"%s"  s
 
 
 (* Instructions *)
@@ -119,6 +119,9 @@ type class_def = {
    d'instructions *)
 type program = {
     classes: class_def list;
-    globals: (string * typ) list;
+    globals: (string * typ ) list;
     main: seq;
   }
+
+
+

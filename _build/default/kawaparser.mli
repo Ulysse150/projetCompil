@@ -8,6 +8,7 @@ type token =
   | VARINT
   | VARBOOL
   | VAR
+  | UMINUS
   | TRUE
   | THIS
   | SUPEQ
@@ -33,6 +34,7 @@ type token =
   | IF
   | IDENT of (string)
   | FALSE
+  | EXT
   | EQ
   | EOF
   | END

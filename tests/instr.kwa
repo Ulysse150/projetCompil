@@ -6,10 +6,15 @@ main {
   a = 2;
   n = 9;
   acc = 1;
+  /*
   while (n != 0) {
     if (n%2 != 0) { acc = a*acc; } else {}
     a = a*a;
     n = n/2;
+  }*/
+  while (acc < 10000){
+    print(acc);
+    acc = acc + 1;
   }
   print(acc);
 }

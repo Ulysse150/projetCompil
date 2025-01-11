@@ -13,7 +13,8 @@ let () =
   let c  = open_in file in
   let lb = Lexing.from_channel c in
   try
-      Printf.printf"Lexing et parsing du fichier...\n";
+   
+    Printf.printf"Lexing et parsing du fichier...\n";
     let prog = Kawaparser.program Kawalexer.token lb in
     Printf.printf"Lexing et parsing du fichier effectués avec succès\n" ;
     close_in c;

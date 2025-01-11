@@ -5,6 +5,7 @@ type token =
   | VARINT
   | VARBOOL
   | VAR
+  | UMINUS
   | TRUE
   | THIS
   | SUPEQ
@@ -30,6 +31,7 @@ type token =
   | IF
   | IDENT of string
   | FALSE
+  | EXT
   | EQ
   | EOF
   | END
@@ -48,10 +50,19 @@ val xv_var_decl : string * Kawa.typ
 val xv_uop : Kawa.unop
 val xv_typ : Kawa.typ
 val xv_program : Kawa.program
+val xv_param_del : Kawa.expr list
+val xv_param : string * Kawa.typ
+val xv_method_def : Kawa.method_def
 val xv_mem : Kawa.mem_access
 val xv_list_var_decl_ : (string * Kawa.typ) list
+val xv_list_param_ : (string * Kawa.typ) list
+val xv_list_method_def_ : Kawa.method_def list
 val xv_list_instruction_ : Kawa.seq
+val xv_list_class_def_ : Kawa.class_def list
+val xv_list_attr_decl_ : (string * Kawa.typ) list
 val xv_instruction : Kawa.instr
 val xv_expression : Kawa.expr
+val xv_class_def : Kawa.class_def
 val xv_bop : Kawa.binop
+val xv_attr_decl : string * Kawa.typ
 val menhir_end_marker : int
