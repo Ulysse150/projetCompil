@@ -35,7 +35,7 @@ let transform_decl decls =
 type unop  = Opp | Not
 type binop = Add | Sub | Mul | Div | Mod
            | Inf | Infeq  | Sup | Supeq | Eq  | Neq
-           | And | Or  | Pow
+           | And | Or  | Pow | Steq | Stdiff
 
            
 let binop_to_string  = 
@@ -54,6 +54,8 @@ let binop_to_string  =
   | And -> "&&"
   | Or -> "||"
   | Pow -> "^"
+  | Steq -> "==="
+  | Stdiff -> "=/="
 
 
 (* Expressions *)
@@ -72,6 +74,7 @@ type expr =
   | NewCstr  of string * expr list
   (* Appel de méthode *)
   | MethCall of expr * string * expr list
+  (*Instance of*)
 
 (* Accès mémoire : variable ou attribut d'un objet *)
 and mem_access =

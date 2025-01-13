@@ -25,7 +25,8 @@
       "int", VARINT;
       "bool", VARBOOL;
       "while", WHILE;
-      "extends", EXT
+      "extends", EXT;
+      "instanceof", INSTOF
     ] ;
   fun s ->
     try  Hashtbl.find h s
@@ -70,6 +71,8 @@ rule token = parse
   |">"{SUP}
   |">="{SUPEQ}
   |"!"{NOT}
+  |"==="{STEQ}
+  |"=/="{STDIFF}
   |"%" {MOD}
   |"," {VIRG}
   |"." {DOT}

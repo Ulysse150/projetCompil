@@ -261,7 +261,7 @@ let typecheck_prog p =
       if (t1 = TInt && t2 = TInt) then TBool (*Si c est le cas on renvoie booleen*)
       else operator_error (binop_to_string op) (typ_to_string t1) (typ_to_string t2) 
 
-    | Eq | Neq -> 
+    | Eq | Neq | Stdiff | Steq -> 
       (*Pour les symboles != et == t1 et t2 doivent etre de meme type*)
       let t1 = type_expr e1 tenv in 
       let t2 = type_expr e2 tenv in 
@@ -304,17 +304,7 @@ let typecheck_prog p =
     if not(typageRespecte type_attendu t p.classes) then 
       error(Printf.sprintf"Set problem : %s expected %s got %s" v (typ_to_string type_attendu) (typ_to_string t))
     else
-      if t <> type_attendu then 
-        match t with
-        | TClass s -> (
-          match m with 
-          | (Var(str)) -> 
-            
-            let tenv = Env.add s t (Env.remove s tenv) in 
-            ()
-          | _ -> ()
-        )
-        | _ -> ()
+      ()
         (*if Env.mem v tenv then 
       let t = type_expr e  tenv in
       let typ_attendu = Env.find v tenv in 
@@ -326,7 +316,11 @@ let typecheck_prog p =
   
 
   and  check_instr i ret tenv = match i with
-    | Print e -> check e TInt tenv
+    | Print e -> (match (type_expr e tenv) with 
+              | TInt | TBool -> ()
+              |     _ -> failwith"Print expects int or bool"
+
+    )
     | Set(m, e) -> checkSet m e tenv
     | If(cond, block1, block2) -> checkIf cond block1 block2 ret tenv
     | While(cond, blocl) -> checkWhile cond blocl ret tenv
@@ -362,4 +356,4 @@ let typecheck_prog p =
   (* On verifie chaque*)
   List.iter (fun cl -> check_class cl tenv) p.classes;
   check_seq p.main TVoid tenv;
-  Env.iter (fun s t -> Printf.printf"%s : %s\n" s (typ_to_string t)) tenv
+

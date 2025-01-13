@@ -1,0 +1,233 @@
+var point p;
+var point y;
+var int x;
+
+var int a;
+var int n;
+var int acc;
+
+var int res_fact;
+
+var int counter;
+var int fact_global;
+
+class point {
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int a, int b) {
+    this.x = a;
+    this.y = b;
+  }
+  
+  
+  method int somme() {
+    return this.x + this.y;
+  }
+  
+
+  
+  method int test_instr_et_acces_globaux(int z){
+      a = 2;
+      n = 9;
+      acc = 1;
+    while ( n > 0 ) {
+      if (n % 2 != 0) { acc = a*acc; } else {} 
+      a = a*a;
+      n = n/2;
+    }
+    a = 5;
+    return acc;
+  }
+
+  method int test_locals(){
+    /*si cette variable a le meme nom que une globale le truc plante*/
+    var int a;
+    a = 7;
+    return a;
+  }
+
+  method void test_void(){
+    print(100);
+  }
+
+  method int fact(int n ){
+    if (n==0){
+      return 1;
+    } else {
+      return n * this.fact(n-1);
+    }
+  }
+
+  method int factTerminale(int n, int acc){
+    if (n == 0) {
+      return acc;
+    } else {
+      return this.factTerminale(n - 1, acc * n);
+    } 
+  }
+
+  
+  method void fact_globale(){
+    if (counter > 0) {
+      fact_global = fact_global * counter;
+      counter = counter - 1;
+      this.fact_globale();
+    } else {
+      print(fact_global);
+    }
+  }
+
+  
+  method void test_global(){
+    print(fact_global);
+  }
+
+
+
+
+
+
+/* verifie par le typechecker
+ Verifie par le typechecker
+
+  method void thing(){
+      return 1; //return dans void
+  }
+
+  method int test(){
+      print(1); //void dans mais attend int
+  }
+
+  method int incoherent(){
+    return false; //type de retour incoherent
+  }
+
+*/
+}
+
+
+main {
+  fact_global = 1;
+  counter = 5;
+
+
+ 
+  n = 5;
+
+  
+  y = new point(3,5);
+  p = new point(2, 1);
+  
+  //affiche 100
+  p.test_void(); 
+
+
+  //affiche 1 1 
+  print(fact_global);
+  p.test_global();
+
+  //affiche 120  3 fois
+  res_fact = p.fact(n);
+  print(res_fact);
+
+  res_fact = p.factTerminale(n,1);
+  print(res_fact);
+
+  p.fact_globale();
+
+
+  //affiche 512
+  n = p.test_instr_et_acces_globaux(n);
+  print(n);
+
+    print(a);
+    print(5);
+  //affiche 7
+  n = p.test_locals();
+  print(n);
+
+  /*ce test et le precedence testent les variables
+  globales, dans une methode on donne de la priorite aux globales
+  */
+
+  //affiche 5 
+  
+
+  
+
+  //Affiche 54
+  p.x = 3 + p.x;
+  print(48 + p.somme());
+  
+  
+   /*resultat attendu:
+ 
+  100
+  1 
+  1
+  120
+  120
+  120
+  512
+  7
+  5
+  54
+  
+  */
+
+  /*Verifie par le typechecker
+
+  test.x = 5;
+
+  z = new point(1,2); 
+  p = new point (false,2);
+  p = new point (y,2)
+  p.x = y;
+  p.x = false;
+
+  x = this.x; //this en dehors d'une methode
+  this.x = 5; 
+
+  p.some(); //methode inexistante
+
+  p = new point(2,1,3); //trop d'arguments
+  p = new ligne (1,2);  //peu d'arguments
+
+  p.test = 5; //acces a un attribut inexistant
+
+  print(ay); //essai d'acces a une variable locale de la methode test locals
+
+   fact_global.test(); //variable de classe int essai d'acceder a une methode de classe point;
+
+  */
+
+  // affiche 54
+}
+
+/*
+Pour les classes et methodes le typechecker verifie:
+
+  (*A la declaration d'une methode*)
+  -type de tous les Returns coherent avec celui declarée par la methode
+  -Methode Void avec return
+  -Methode !Void sans return
+  -Verifie que les isntructions dans une methode sont coherentes
+
+
+  (*A l'appel d'une methode dont le constructor*)
+  -Que la classe existe
+  -Que la methode existe
+  -Que le nombre de parametres passées est celui attendu
+  -Que le type de parametres est celui attendu
+  -Le type de l'obejt qu'appelle la methode appartient a la classe
+  -Le type de l'objet correspond a la classe cree par NewCstr
+
+  (*Attributs*)
+  - On verifie que seulement les objets de la classe peuvent acceder aux attributs;
+  - Au moment d'affecter une valeur a l'attribut on verifie que son type correspond a celui de l'attribut
+
+  (*Autre*)
+  -This utilisée uniquement dans le contexte d'une methode
+
+*/

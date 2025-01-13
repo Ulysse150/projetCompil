@@ -17,12 +17,25 @@ let typ_to_string = function
   | TClass c -> c
 
 
+(*Transforme une liste de (t, [s1,..., sn])
+ou t est le type des variables s1, ..., sn
+pour les variables declarees en serie
+et les transforme en [(s1, t), ... , (sn, t)]
+*)
+
+let transform_decl decls = 
+  let t, l = decls in 
+  List.map (fun s -> (s, t)) l
+
+
+
+
 
 
 type unop  = Opp | Not
 type binop = Add | Sub | Mul | Div | Mod
            | Inf | Infeq  | Sup | Supeq | Eq  | Neq
-           | And | Or  | Pow
+           | And | Or  | Pow | Steq | Stdiff
 
            
 let binop_to_string  = 
@@ -41,6 +54,8 @@ let binop_to_string  =
   | And -> "&&"
   | Or -> "||"
   | Pow -> "^"
+  | Steq -> "==="
+  | Stdiff -> "=/="
 
 
 (* Expressions *)
@@ -59,6 +74,7 @@ type expr =
   | NewCstr  of string * expr list
   (* Appel de méthode *)
   | MethCall of expr * string * expr list
+  (*Instance of*)
 
 (* Accès mémoire : variable ou attribut d'un objet *)
 and mem_access =

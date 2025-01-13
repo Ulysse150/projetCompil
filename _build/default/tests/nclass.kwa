@@ -47,5 +47,9 @@ main {
   p.y = 4;
   print(s.b.x);
   print(s.a.x + s.a.y + s.b.x + s.b.y);
+
+  if ( s === s){
+    print(74);
+  }
   
 }

@@ -80,7 +80,7 @@ let getAttribs class_name allClasses =
 
 exception Error of string
 exception Return of value
-
+exception False
 
 let envFromDecl varDecl = 
   let env = Hashtbl.create 16 in 
@@ -126,6 +126,33 @@ let exec_prog (p: program): unit =
       | 1 -> a*pow a (n - 1);
       | n -> failwith"Impossible";
   in
+
+    let rec stequals v1 v2 =
+      
+      let aux fields1 fields2 = 
+        try 
+        Hashtbl.fold (fun k v1 acc-> 
+          let v2 = Hashtbl.find fields2 k in 
+          if stequals v1 v2 then true 
+          else raise False
+          
+          ) fields1 true
+        with False -> false
+      in
+
+      match v1, v2 with 
+      | VInt n1, VInt n2 -> v1 = v2 
+      | VBool b1, VBool b2 -> b1 = b2 
+      | VObj o1, VObj o2 -> aux o1.fields o2.fields
+      | _ , _ -> failwith"You cant compare 2 objects of different types"
+                (*Ce failwith n apparaitra jamais si le typechecker est bien fait*)
+      
+    in
+
+    let stDiff v1 v2 = 
+      not(stequals v1 v2) 
+    in
+
 
     let rec getHash m env= 
 
@@ -184,6 +211,7 @@ let exec_prog (p: program): unit =
       let locals = Hashtbl.create 16 in 
       
       Hashtbl.iter (fun k (s, t) -> Hashtbl.replace locals k (s, t)) lenv;
+      List.iter (fun (s, t) -> Hashtbl.replace locals s (t, Null)) method_def.locals;
       (*let () = match this with
       | Get(Var(str)) -> 
       | _ -> Hashtbl.iter (fun k (s, t) -> Hashtbl.replace locals k (s, copyValue(t))) lenv;*)
@@ -230,53 +258,9 @@ let exec_prog (p: program): unit =
     and eval (e: expr): value = match e with
       | Int n  -> VInt n
       | Bool b -> VBool(b)
-
-      |   Binop(Mul, e1 ,e2) ->
-        VInt( evali e1 *  evali e2)
-
-      | Binop(Div, e1 ,e2) ->
-        VInt( evali e1 /  evali e2)
-
-      |Binop(Pow, e1, e2) -> 
-        VInt(pow (evali e1) (evali e2))
-        
-        | Binop(Add, e1 ,e2) ->
-          VInt( evali e1 +  evali e2)
-  
-        |  Binop(Sub, e1 ,e2) ->
-          VInt( evali e1 -  evali e2)
-        | Binop(Mod, e1, e2) -> 
-          VInt((evali e1) mod (evali e2))
-
-        | Binop(And, e1, e2) -> 
-          VBool((evalb e1) && (evalb e2))
-          
-        | Binop(Or, e1, e2) -> 
-          VBool((evalb e1) || (evalb e2))
-
-        | Binop(Sup, e1, e2) ->
-          VBool((evali e1) > (evali e2) )
-
-        | Binop(Supeq, e1, e2) -> 
-          VBool((evali e1) >= (evali e2) )
-        | Binop(Inf, e1, e2) -> 
-          VBool((evali e1) < (evali e2) )
-
-        | Binop(Infeq, e1, e2) -> 
-          VBool((evali e1) <= (evali e2) )
-          
-        |Binop(Eq, e1, e2) -> 
-          VBool((eval e1) = (eval e2))
-
-        |Binop(Neq, e1, e2) -> 
-          VBool((eval e1) <> (eval e2))
-
-      | Unop(Opp, e)-> VInt(-evali e)
-      | Unop(Not, b) -> 
-        VBool(not(evalb (b)))
-
+      | Binop(o, e1, e2) -> eval_binop o e1 e2
+      | Unop(o, e) -> eval_unop o e
       | Get(m) -> exec_get m lenv
-        
       | New s -> 
         (*let cl = List.find (fun c -> c.class_name = s) p.classes in*) 
         let hash = Hashtbl.create 16 in 
@@ -284,17 +268,12 @@ let exec_prog (p: program): unit =
         
         let att = getAttribs s p.classes in
 
-        
         List.iter ( fun (s, t) -> Hashtbl.replace hash s  Null) att ;
-
-
-        
 
         VObj({cls = s; fields= hash})
 
 
       | MethCall(obj, id, args) -> eval_call id obj args
-
       | NewCstr(s, exprs) ->
 
           let obj = eval (New(s)) in 
@@ -333,6 +312,48 @@ let exec_prog (p: program): unit =
       | This-> (*On suppose que l'on est dans une methode*)
          snd(Hashtbl.find lenv "this")
 
+    and eval_binop op e1 e2 = 
+      match op with 
+      (*Operateurs sur entiers*)
+      | Add -> VInt((evali e1) + (evali e2))
+      | Sub -> VInt((evali e1) - (evali e2))
+      | Mul -> VInt((evali e1) * (evali e2))
+      | Mod -> VInt((evali e1) mod (evali e2))
+      | Div -> VInt((evali e1) / (evali e2))
+      | Pow -> VInt(pow (evali e1) (evali e2))
+      (*Comparaisons*)
+      | Inf -> VBool((evali e1) < (evali e2))
+      | Infeq -> VBool((evali e1) <= (evali e2))
+      | Supeq -> VBool((evali e1) >= (evali e2))
+      | Sup -> VBool((evali e1) > (evali e2))
+      | Eq -> VBool(( 
+            match eval e1, eval e2 with 
+            | VInt n1, VInt n2 -> n1 == n2 
+            | VBool b1, VBool b2 -> b1 == b2
+            | VObj o1, VObj o2 -> o1 == o2 
+            | _ -> failwith""
+          ))  
+      
+      | Neq -> VBool(( 
+        match eval e1, eval e2 with 
+        | VInt n1, VInt n2 -> n1 != n2 
+        | VBool b1, VBool b2 -> b1 != b2
+        | VObj o1, VObj o2 -> o1 != o2 
+        | _ -> failwith""
+      ))  
+      
+      (*Operateurs sur les booleens*)
+      | And -> VBool((evalb e1) && (evalb e2))
+      | Or  -> VBool((evalb e1) || (evalb e2))
+       (*Egalite structurelle*)
+      | Stdiff -> VBool(stequals (eval e1) (eval e2))
+      | Steq -> VBool(stDiff (eval e1) (eval e2))
+
+    and eval_unop o e = 
+      match o with 
+      | Opp -> VInt(-(evali e))
+      | Not -> VBool(evalb e)
+
     and exec_set mem e =
       
       let valeur = eval e in
@@ -350,20 +371,12 @@ let exec_prog (p: program): unit =
         
       | _ -> failwith"Impossible"
 
-
-
-      (*let name = match mem with 
-      | Var v -> v 
-      | Field(a, b)-> failwith"Not implemented yet"
-      in
-      let t = fst (Hashtbl.find env name) in
-
-      Hashtbl.replace env name (t, eval e);*)
-    
-
-
       and exec (i: instr): unit = match i with
-      | Print e -> Printf.printf "%d\n" (evali e)
+      | Print e -> (match (eval e ) with 
+                | VInt n-> Printf.printf"%d\n" n
+                | VBool b -> Printf.printf"%b\n" b
+                | _ -> failwith"Erreur typechecker"
+      )
       | Set(m, e) -> exec_set m e
       | If(cond, b1, b2) -> (
           if evalb cond then execseq b1

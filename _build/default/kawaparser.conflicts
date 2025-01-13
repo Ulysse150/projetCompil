@@ -1,6 +1,6 @@
 
-** Conflict (shift/reduce) in state 52.
-** Tokens involved: SUPEQ SUP STAR POW PLUS OR MOD MINUS INFEQ INF DOT DIV DIFF DEQ AND
+** Conflict (shift/reduce) in state 51.
+** Tokens involved: SUPEQ SUP STEQ STDIFF STAR POW PLUS OR MOD MINUS INFEQ INF DOT DIV DIFF DEQ AND
 ** The following explanations concentrate on token SUPEQ.
 ** This state is reached from program after reading:
 
@@ -15,72 +15,15 @@ list(var_decl) list(class_def) MAIN BEGIN list(instruction) END EOF
                                           expression SEMI 
                                           (?)
 
-** In state 52, looking ahead at SUPEQ, reducing production
+** In state 51, looking ahead at SUPEQ, reducing production
 ** expression -> uop expression
 ** is permitted because of the following sub-derivation:
 
 expression SUPEQ expression // lookahead token appears
 uop expression . 
 
-** In state 52, looking ahead at SUPEQ, shifting is permitted
+** In state 51, looking ahead at SUPEQ, shifting is permitted
 ** because of the following sub-derivation:
 
 uop expression 
     expression . SUPEQ expression 
-
-** Conflict (reduce/reduce) in state 48.
-** Tokens involved: VIRG SUPEQ SUP STAR SEMI RPAR POW PLUS OR MOD MINUS INFEQ INF DOT DIV DIFF DEQ AND
-** The following explanations concentrate on token SUPEQ.
-** This state is reached from program after reading:
-
-list(var_decl) list(class_def) MAIN BEGIN IDENT
-
-** The derivations that appear below have the following common factor:
-** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
-
-program 
-list(var_decl) list(class_def) MAIN BEGIN list(instruction) END EOF 
-                                          instruction list(instruction) 
-                                          expression SEMI 
-                                          expression SUPEQ expression // lookahead token appears
-                                          (?)
-
-** In state 48, looking ahead at SUPEQ, reducing production
-** expression -> IDENT
-** is permitted because of the following sub-derivation:
-
-IDENT . 
-
-** In state 48, looking ahead at SUPEQ, reducing production
-** mem -> IDENT
-** is permitted because of the following sub-derivation:
-
-mem // lookahead token is inherited
-IDENT . 
-
-** Conflict (shift/reduce) in state 44.
-** Token involved: INT
-** This state is reached from program after reading:
-
-list(var_decl) list(class_def) MAIN BEGIN MINUS
-
-** The derivations that appear below have the following common factor:
-** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
-
-program 
-list(var_decl) list(class_def) MAIN BEGIN list(instruction) END EOF 
-                                          instruction list(instruction) 
-                                          expression SEMI 
-                                          (?)
-
-** In state 44, looking ahead at INT, shifting is permitted
-** because of the following sub-derivation:
-
-MINUS . INT 
-
-** In state 44, looking ahead at INT, reducing production
-** uop -> MINUS
-** is permitted because of the following sub-derivation:
-
-uop expression // lookahead token appears because expression can begin with INT
-MINUS . 

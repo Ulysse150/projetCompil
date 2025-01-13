@@ -31,10 +31,14 @@ main {
   }
 
   
-  bo = x % 2 != 0;
-  
+  bo = -1*5 >= 3;
+  if (bo){
+    print(1);
+  }else{
+    print(0);
+  }
 
-  print(y);
+
 
  
 

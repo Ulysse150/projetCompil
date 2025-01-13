@@ -8,11 +8,12 @@ type token =
   | VARINT
   | VARBOOL
   | VAR
-  | UMINUS
   | TRUE
   | THIS
   | SUPEQ
   | SUP
+  | STEQ
+  | STDIFF
   | STAR
   | SEMI
   | RPAR
@@ -29,6 +30,7 @@ type token =
   | MAIN
   | LPAR
   | INT of (int)
+  | INSTOF
   | INFEQ
   | INF
   | IF
@@ -44,7 +46,6 @@ type token =
   | DIFF
   | DEQ
   | CLASS
-  | BOOL of (bool)
   | BEGIN
   | ATT
   | AND

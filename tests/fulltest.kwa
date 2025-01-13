@@ -1,0 +1,243 @@
+var point p;
+var point y;
+var paire pt;
+var paire ptt;
+var triple t;
+var int x;
+var int a;
+var int n;
+var int acc;
+var int res_fact;
+var int counter;
+var int fact_global;
+var bool b;
+var int c;
+var rec1 r1;
+var rec2 r2;
+
+class rec1 {
+  attribute rec1 x;
+  attribute rec1 y;
+}
+
+class rec2 {
+    attribute rec1 x;
+}
+
+class point {
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int a, int b) {
+    this.x = a;
+    this.y = b;
+}
+  
+  
+  method int somme() {
+    return this.x + this.y;
+  }
+  
+  method int test_instr_et_acces_globaux(int z) {
+    a = 2;
+    n = 9;
+    acc = 1;
+    while ( n > 0 ) {
+      if (n % 2 != 0) { acc = a*acc; } else {} 
+      a = a*a;
+      n = n/2;
+    }
+    a = 5;
+    return acc;
+  }
+
+  method int test_locals() {
+    var int a;
+    a = 7;
+    return a;
+  }
+
+  method void test_void() {
+    print(100);
+  }
+
+  method int fact(int n) {
+   
+    if (n == 0) { return 1;} 
+    else { return n * this.fact(n-1); }
+  }
+
+  method int factTerminale(int n, int acc) {
+    if (n == 0) { return acc; } 
+    else { return this.factTerminale(n - 1, acc * n); } 
+  }
+
+  method void fact_globale() {
+    if (counter > 0) {
+      fact_global = fact_global * counter;
+      counter = counter - 1;
+      this.fact_globale();
+    } else { print(fact_global); }
+  }
+
+  method void test_global() {
+    print(fact_global);
+  }
+
+  method int casif5() {
+    if (false) { return 42; }
+    return 43;
+  }
+
+  method int casif6() {
+    if (false) { return 42; }
+    else { return 43; }
+  }
+
+  method int casif7() {
+    if (false) {}
+    else { return 43; }
+    return 42; 
+  }
+
+  method int casif8() {
+    if (false) { return 43; }
+    else {}
+    return 42; 
+  }
+
+  method int casif9() {
+    if (false) {}
+    else {}
+    return 42; 
+  }
+
+  method int casif10() {
+    if (false) {}
+    return 42; 
+  }
+
+  method int while1() {
+    while false { return 42; }
+    return 43;
+  }
+
+  method int while2() {
+    while false {}
+    return 42;
+  }
+
+  method int while3() {
+    while false { return 42; }
+  }
+
+  method int while4() {
+    while false {}
+  }
+
+  method int while5() {
+    while false { return false; }
+    return 42;
+  }
+
+  method void while6() {
+    while false { return false; }
+  }
+}
+
+class paire {
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  method int somme() {
+    return this.x + this.y;
+  }
+}
+
+class triple extends paire {
+  attribute int z;
+
+  method void constructor(int x, int y, int z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+
+  method int somme() {
+    return this.x + this.y + this.z;
+  }
+
+  method int produit() {
+    return this.x * this.y * this.z;
+  }
+}
+
+main {
+  fact_global = 1;
+  counter = 5;
+  a = 3;
+  n = 5;
+  y = new point(3,5);
+  p = new point(2, 1);
+  //p.test_void(); 
+  
+  //p.test_global();
+
+  print(n);
+  res_fact = p.fact(n);
+
+  
+
+  //print(res_fact);
+  res_fact = p.factTerminale(n,1);
+  //print(res_fact);
+  
+  
+  n = p.test_instr_et_acces_globaux(n);
+  print(n);
+  n = p.test_locals();
+  print(n);
+  
+
+  print(a);
+  print(48 + p.somme());
+  pt = new paire(1, 2);
+  t = new triple(3, 4, 5);
+  print(pt.somme());
+  print(t.somme());
+  print(t.produit());
+  ptt = new triple(1, 2,3);
+  print(ptt.somme());
+
+  
+  r2 = new rec2;
+  print(40 - 2 - (3 + 1) * 4 / 8 + 6);  
+  print(40-5);
+  print(40+5); 
+  print(40*5); 
+  print(40/5); 
+  print(40%7); 
+  print(---5);
+  print(--5);
+  print(-5);
+  print(true && true);
+  print(true && false);
+  print(false && true);
+  print(false && false);
+  print(true == true);
+  print(42 == 43);
+  print(true != true);
+  print(42 != 43);
+  print(true || true);
+  print(true || false);
+  print(false || true);
+  print(false || false);
+  print(!true);
+  print(!false);
+  print(!!true);
+}

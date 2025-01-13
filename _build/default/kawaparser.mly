@@ -5,7 +5,6 @@
 
 %token <int> INT
 %token <string> IDENT
-%token <bool> BOOL
 %token TRUE
 %token FALSE
 %token MAIN
@@ -42,24 +41,24 @@
 %token POW
 %token VARINT
 %token VARBOOL
-%token UMINUS
-      
+%token STEQ
+%token STDIFF
 %token EXT 
+%token INSTOF
 
 
+          
+%left OR              
+%left AND             
+
+%left INF INFEQ SUP SUPEQ DEQ DIFF STEQ STDIFF
 
 
-%right EQ             // Affectation
-%left OR              // OU logique
-%left AND             // ET logique
-%left DEQ DIFF        // Égalité et différence
-%left INF INFEQ SUP SUPEQ // Comparaison
-%left PLUS MINUS      // Addition et soustraction (binaire)
-%left STAR DIV MOD    // Multiplication, division, modulo
-%right POW            // Puissance (associativité à droite)
-%right NOT
-// Opérateurs unaires NOT e
+%left PLUS MINUS     
+%left STAR DIV MOD    
+%right POW               
 %nonassoc DOT
+
 
 
 %start program
@@ -84,16 +83,18 @@ class_def:
 ;
 
 method_def:
-  | METH t=typ name=IDENT LPAR params=list(param) RPAR BEGIN locals=list(var_decl) instrs=list(instruction) END
-    { { method_name = name; code = instrs; params = params; locals = locals; return = t } }
+  | METH t=typ name=IDENT LPAR params=list(param) RPAR BEGIN local=list(var_decl) instrs=list(instruction) END
+    { { method_name = name; code = instrs; params = params; locals = local; return = t } }
 ;
 
 instruction:
   | PRINT LPAR e=expression RPAR SEMI { Print(e) }
   | m=mem EQ e=expression SEMI { Set(m, e) }
-  | IF LPAR cond=expression RPAR BEGIN instructions1=list(instruction) END ELSE BEGIN instructions2=list(instruction) END
+  | IF  cond=expression  BEGIN instructions1=list(instruction) END ELSE BEGIN instructions2=list(instruction) END
     { If(cond, instructions1, instructions2) }
-  | WHILE LPAR cond=expression RPAR BEGIN block=list(instruction) END
+  |  IF  cond=expression  BEGIN instructions1=list(instruction) END 
+    { If(cond, instructions1, []) }
+  | WHILE  cond=expression  BEGIN block=list(instruction) END
     { While(cond, block) }
   | RETURN e=expression SEMI { Return(e) }
   | e = expression SEMI{Expr(e)}
@@ -114,10 +115,6 @@ param:
   | t=typ id=IDENT { (id, t) }
 ;
 
-mem:
-  | id=IDENT { Var(id) }
-  | e=expression DOT id=IDENT { Field(e, id) }
-;
 
 typ:
   | VARINT { TInt }
@@ -137,7 +134,7 @@ expression:
   | e1=expression op=bop e2=expression { Binop(op, e1, e2) }
   | MINUS n=INT { Int(-n) }
   | LPAR e=expression RPAR { e }
-  | id=IDENT { Get(Var(id)) }
+  
   | THIS { This }
   | m=mem { Get(m) }
   | NEW id=IDENT { New(id) }
@@ -145,9 +142,13 @@ expression:
   | e=expression DOT id=IDENT LPAR params=param_del RPAR { MethCall(e, id, params) }
 ;
 
+mem:
+  | id=IDENT { Var(id) }
+  | e=expression DOT id=IDENT { Field(e, id) }
+;
 
 uop:
-  | MINUS{ Opp }
+  | MINUS { Opp }
   | NOT { Not }
 ;
 
@@ -167,4 +168,6 @@ uop:
   | DIV { Div }
   | INF { Inf }
   | AND { And }
+  | STEQ {Steq}
+  | STDIFF {Stdiff}
 ;

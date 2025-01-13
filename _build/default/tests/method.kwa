@@ -1,7 +1,9 @@
 var point p;
+var point t;
 var int a;
 
 var int b;
+var bool bo;
 
 class point {
   attribute int x;
@@ -18,10 +20,10 @@ class point {
     this.y = this.y + this.y;
   }
 
-  method int somme(int a, int b) {
+  method int somme() {
    
     
-    return false;
+    return this.x + this.y;
   }
 
   method int facto( int n){
@@ -40,16 +42,19 @@ class point {
 
 main {
   a = 7;
-
+ 
   p = new point(2,1);
   
-  print(p.somme(4,7));
+  t = new point(4, 3);
+
+  print(p.somme());
+  bo = p =/= t;
+  if (bo){
+    print(7);
+  }else{
+    print(4);
+  }
   
- 
-  
-  
-  a = p.facto(10);
-  print(a);
  
   
 }
