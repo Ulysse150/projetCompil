@@ -86,6 +86,14 @@ let countF f list =
   in 
   aux list 0
 
+(*Renvoie un booleen si le type t est défini*)
+let typeExists t p = 
+  match  t  with
+  | "int"| "bool" -> true
+  | s -> List.exists (fun cl -> cl.class_name = s) p.classes
+
+
+
 
 
 let add_env l tenv =
@@ -120,6 +128,10 @@ let typecheck_prog p =
         | None -> failwith("Use of This outside of a class")
         | Some c -> c)
     | MethCall(e, s, l) -> typeMethCall e s l tenv
+    | Instof(e, t) -> ignore (type_expr e tenv) ;
+                      if (typeExists t p) then 
+                        TBool else error(Printf.sprintf"Erreur at instance of type %s is not defined" t)
+
     
 
 

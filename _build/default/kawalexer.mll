@@ -25,8 +25,9 @@
       "int", VARINT;
       "bool", VARBOOL;
       "while", WHILE;
+      "instanceof", INSTOF;
       "extends", EXT;
-      "instanceof", INSTOF
+      
     ] ;
   fun s ->
     try  Hashtbl.find h s

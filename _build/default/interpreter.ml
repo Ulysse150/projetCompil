@@ -311,6 +311,16 @@ let exec_prog (p: program): unit =
 
       | This-> (*On suppose que l'on est dans une methode*)
          snd(Hashtbl.find lenv "this")
+      | Instof(e, t) -> VBool(eval_instof e t)
+
+    and eval_instof e t = match eval e with 
+    | VInt n -> t = TInt
+    | VBool b -> t = TBool
+    | VObj o -> let ancestors = getParents o.cls p.classes in
+            
+            (TClass(o.cls) = t ) || (List.exists (fun cl -> TClass(cl.class_name) = t) ancestors)
+                  
+    | _ -> failwith""
 
     and eval_binop op e1 e2 = 
       match op with 
@@ -352,7 +362,7 @@ let exec_prog (p: program): unit =
     and eval_unop o e = 
       match o with 
       | Opp -> VInt(-(evali e))
-      | Not -> VBool(evalb e)
+      | Not -> VBool(not(evalb e))
 
     and exec_set mem e =
       

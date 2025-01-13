@@ -1,0 +1,72 @@
+
+var int n1;
+var int n2;
+var bool b;
+
+var cl1 ob1;
+var cl2 ob2;
+var cl3 ob3;
+var cl4 ob4;
+var cl5 ob5;
+
+
+class cl1{
+    attribute int x;
+    attribute int y;
+
+}
+
+
+class cl2 extends cl1{
+    attribute int j;
+    attribute int z;
+}
+
+
+class cl3 extends cl2{
+    attribute bool b;
+}
+
+class cl4{
+    attribute bool c;
+}
+
+class cl5 extends cl4{
+    attribute int v1;
+    attribute int v2;
+
+}
+
+
+main{
+    n1 = 5;
+    n2 = 4;
+
+    ob1 = new cl1;
+    ob2 = new cl2;
+    ob3 = new cl3;
+    ob4 = new cl4;
+    ob5 = new cl5;
+
+    /* Doit afficher true*/
+    print(n1 instanceof int);
+    print(n2 instanceof int);
+    b = n2*n1 instanceof int;
+    print(b);
+
+
+    print(ob3 instanceof cl1 && ob3 instanceof cl2 && ob3 instanceof cl1);
+    //print(ob3 instanceof cl2);
+    //print(ob3 instanceof cl1);
+
+    print(ob4 instanceof cl4 && ob5 instanceof cl5) ;
+    print(!(ob1 instanceof int));
+    print(!(ob2 instanceof cl4));
+    print(!(true instanceof cl3));
+    
+
+
+    
+
+
+}

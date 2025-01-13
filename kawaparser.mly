@@ -53,10 +53,11 @@
 
 %left INF INFEQ SUP SUPEQ DEQ DIFF STEQ STDIFF
 
-
+%left INSTOF  
 %left PLUS MINUS     
 %left STAR DIV MOD    
-%right POW               
+%right POW  
+           
 %nonassoc DOT
 
 
@@ -140,6 +141,9 @@ expression:
   | NEW id=IDENT { New(id) }
   | NEW id=IDENT LPAR exprs=param_del RPAR { NewCstr(id, exprs) }
   | e=expression DOT id=IDENT LPAR params=param_del RPAR { MethCall(e, id, params) }
+
+  | e =expression INSTOF id = typ {Instof(e, id)}
+
 ;
 
 mem:
