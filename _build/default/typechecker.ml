@@ -128,9 +128,15 @@ let typecheck_prog p =
         | None -> failwith("Use of This outside of a class")
         | Some c -> c)
     | MethCall(e, s, l) -> typeMethCall e s l tenv
-    | Instof(e, t) -> ignore (type_expr e tenv) ;
-                      if (typeExists t p) then 
-                        TBool else error(Printf.sprintf"Erreur at instance of type %s is not defined" t)
+    | Instof(e, t) -> 
+        ignore (type_expr e tenv) ;
+        (match t with 
+        | TClass s -> if (typeExists s p) then 
+          TBool else error(Printf.sprintf"Erreur at instance of type %s is not defined" s)
+        | _ -> TBool
+        )
+      
+                      
 
     
 

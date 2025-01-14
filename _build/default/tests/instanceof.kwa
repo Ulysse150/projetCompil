@@ -1,6 +1,6 @@
 
-var int n1;
-var int n2;
+var int n1, n2, n3;
+
 var bool b;
 
 var cl1 ob1;
@@ -8,7 +8,9 @@ var cl2 ob2;
 var cl3 ob3;
 var cl4 ob4;
 var cl5 ob5;
-
+/*
+// Hola
+*/
 
 class cl1{
     attribute int x;
@@ -35,12 +37,28 @@ class cl5 extends cl4{
     attribute int v1;
     attribute int v2;
 
+    method void afficher(){
+        print(this.v1);
+        print(this.v2);
+    }
+
+    method void constructor(int x, int x){
+        
+        this.v1 = x;
+        this.v2 = x;
+        this.afficher();
+        
+    }
+
+
+
 }
 
 
 main{
     n1 = 5;
     n2 = 4;
+    n3 = 7;
 
     ob1 = new cl1;
     ob2 = new cl2;
@@ -59,12 +77,19 @@ main{
     //print(ob3 instanceof cl2);
     //print(ob3 instanceof cl1);
 
-    print(ob4 instanceof cl4 && ob5 instanceof cl5) ;
+    //print(ob4 instanceof cl4 && ob5 instanceof cl5) ;
     print(!(ob1 instanceof int));
     print(!(ob2 instanceof cl4));
     print(!(true instanceof cl3));
+     print(!true instanceof cl3);
     
+    print(n1);
+    print(n2);
+    print(n3);
 
+    ob5 = new cl5(2, 1);
+    
+    
 
     
 

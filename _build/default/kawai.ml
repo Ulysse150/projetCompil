@@ -3,6 +3,13 @@ open Lexing
 
 let file = Sys.argv.(1)
 
+
+
+
+
+
+
+
 let report (b,e) =
   let l = b.pos_lnum in
   let fc = b.pos_cnum - b.pos_bol + 1 in
@@ -10,21 +17,41 @@ let report (b,e) =
   eprintf "File \"%s\", line %d, characters %d-%d:\n" file l fc lc
 
 let () =
-  let c  = open_in file in
-  let lb = Lexing.from_channel c in
-  try
    
-    Printf.printf"Lexing et parsing du fichier...\n";
+   let c  = open_in file in
+   let lb = Lexing.from_channel c in
+
+   let steps = Array.mem "-s" Sys.argv in 
+
+   
+  
+  try
+    if steps then 
+    Printf.printf"Debut lexing et parsing du fichier \n"
+    else ();
     let prog = Kawaparser.program Kawalexer.token lb in
-    Printf.printf"Lexing et parsing du fichier effectués avec succès\n" ;
+
+    if steps then 
+    Printf.printf"Lexing et parsing du fichier effectués avec succès\n \n" 
+    else (); 
+
     close_in c;
-    Printf.printf"Typechecking du programme...\n";
-    (*Typechecker.typecheck_prog prog;
-    Printf.printf"Typechecking du programme effectue avec succes\n";*)
+
+    if steps then 
+    Printf.printf"Typechecking du programme...\n"
+    else ();
+
+    Typechecker.typecheck_prog prog;
+    if steps then 
+    Printf.printf"Typechecking du programme effectue avec succes\n\n"
+    else ();
     
-    Printf.printf"Execution du programme...\n";
+    if (steps) then 
+    Printf.printf"Execution du programme...\n \n" else ();
     Interpreter.exec_prog prog;
-    Printf.printf"Programme execute avec succes...\n";
+    
+    if steps then 
+    Printf.printf"Programme execute avec succes...\n" else ();
     exit 0
   with
   | Kawalexer.Error s ->

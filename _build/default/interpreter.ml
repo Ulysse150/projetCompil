@@ -301,10 +301,9 @@ let exec_prog (p: program): unit =
           (* Associer les paramètres évalués aux noms des arguments *)
           let () = List.iter2 (fun (s, ty) v -> Hashtbl.replace locals s (ty, v) ) method_def.params params in
           let () = 
-            try 
+            
                exec_seq method_def.code locals
-            with 
-            | _ -> failwith"Un consctructeur ne renvoie rien"
+           
           in
           VObj(instance)
 
@@ -320,7 +319,7 @@ let exec_prog (p: program): unit =
             
             (TClass(o.cls) = t ) || (List.exists (fun cl -> TClass(cl.class_name) = t) ancestors)
                   
-    | _ -> failwith""
+    | _ -> failwith"Impossible"
 
     and eval_binop op e1 e2 = 
       match op with 

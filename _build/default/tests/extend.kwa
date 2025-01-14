@@ -1,7 +1,7 @@
 
-var int pi;
+var paire p;
 var paire pt;
-var int fact_global;
+var triple t;
 
 class paire {
   attribute int x;
@@ -13,55 +13,20 @@ class paire {
   }
 
   method int somme() {
-    var int a;
-    a = 7;
-    
-    return this.x + this.y  ;
-    
-
+    return this.x + this.y;
   }
-
-
-
-   method void test_global() {
-    print(fact_global);
-  }
-
-  method void augmente(){
-    this.x = this.x * 2;
-    this.y = 2 * this.y;
-  }
-  method int test_instr_et_acces_globaux(int z) {
-    var int a;
-    var int n;
-    var int acc;
-    a = 2;
-    n = 9;
-    acc = 1;
-    while ( n > 0 ) {
-      if (n % 2 != 0) { acc = a*acc; } else {} 
-      a = a*a;
-      n = n/2;
-    }
-    
-    return acc;
-  }
-
 }
 
 class triple extends paire {
   attribute int z;
 
   method void constructor(int x, int y, int z) {
-   
     this.x = x;
     this.y = y;
-    print(4);
     this.z = z;
   }
 
   method int somme() {
-    print(pi);
     return this.x + this.y + this.z;
   }
 
@@ -71,13 +36,12 @@ class triple extends paire {
 }
 
 main {
-  pi = 7891;
-  fact_global = 145;
-  
+  p = new paire(1, 2);
+  t = new triple(3, 4, 5);
+  print(p.somme());
+  print(t.somme());
+  print(t.produit());
   pt = new triple(1, 2,3);
-  pt.test_global();
   print(pt.somme());
-  print(pt.test_instr_et_acces_globaux(7));
- 
-  
+  // affiche 3, puis 12, puis 60, puis 6.
 }

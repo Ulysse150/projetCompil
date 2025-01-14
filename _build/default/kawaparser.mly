@@ -47,7 +47,7 @@
 %token INSTOF
 
 
-          
+   (*       
 %left OR              
 %left AND             
 
@@ -58,7 +58,13 @@
 %left STAR DIV MOD    
 %right POW  
            
-%nonassoc DOT
+%nonassoc DOT*)
+%left DEQ DIFF STEQ STDIFF SUP SUPEQ INF INFEQ AND OR
+%left INSTOF  
+%left PLUS MINUS
+%left STAR DIV MOD
+%right NOT POW
+%left DOT
 
 
 
@@ -66,25 +72,29 @@
 %type <Kawa.program> program
 %%
 program:
-  | variables=list(var_decl) cls=list(class_def) MAIN BEGIN main=list(instruction) END EOF
+  | variables=var_list cls=list(class_def) MAIN BEGIN main=list(instruction) END EOF
     { { classes = cls; globals = variables; main = main } }
 ;
 
 attr_decl:
-  | ATT t=typ id=IDENT SEMI { (id, t) }
+  | ATT t=typ ids= separated_list(VIRG , IDENT) SEMI 
+  { List.map (fun id -> (id, t)) ids  }
 ;
 
+attr_list:
+| attr_decls=list(attr_decl) { List.flatten attr_decls }
+;
 class_def:
-  | CLASS id=IDENT BEGIN attributes=list(attr_decl) methods=list(method_def) END
+  | CLASS id=IDENT BEGIN attributes=attr_list methods=list(method_def) END
     { { class_name = id; attributes = attributes; methods = methods; parent = None } }
     
-  | CLASS id=IDENT EXT pa = IDENT BEGIN attributes=list(attr_decl) methods=list(method_def) END
+  | CLASS id=IDENT EXT pa = IDENT BEGIN attributes=attr_list methods=list(method_def) END
     { { class_name = id; attributes = attributes; methods = methods; parent = Some pa } }
 
 ;
 
 method_def:
-  | METH t=typ name=IDENT LPAR params=list(param) RPAR BEGIN local=list(var_decl) instrs=list(instruction) END
+  | METH t=typ name=IDENT LPAR params=list(param) RPAR BEGIN local=var_list instrs=list(instruction) END
     { { method_name = name; code = instrs; params = params; locals = local; return = t } }
 ;
 
@@ -125,15 +135,23 @@ typ:
 ;
 
 var_decl:
-  | VAR t=typ id=IDENT SEMI { (id, t) }
+  | VAR t=typ ids=separated_list(VIRG, IDENT) SEMI 
+  { List.map (fun id -> (id, t)) ids }
 ;
+
+
+var_list:
+| var_decls=list(var_decl) { List.flatten var_decls }
+;
+
+
 expression:
   | n=INT { Int(n) }
   | TRUE { Bool(true) }
   | FALSE { Bool(false) }
   | op=uop e=expression { Unop(op, e) }
   | e1=expression op=bop e2=expression { Binop(op, e1, e2) }
-  | MINUS n=INT { Int(-n) }
+  
   | LPAR e=expression RPAR { e }
   
   | THIS { This }
@@ -151,7 +169,7 @@ mem:
   | e=expression DOT id=IDENT { Field(e, id) }
 ;
 
-uop:
+%inline uop:
   | MINUS { Opp }
   | NOT { Not }
 ;

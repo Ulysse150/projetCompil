@@ -1,13 +1,5 @@
-
-
-
 var segment s;
-var segment p;
-var segment t;
 var point p;
-var triangle tri;
-
-
 
 class point {
   attribute int x;
@@ -19,37 +11,16 @@ class segment {
   attribute point b;
 }
 
-
-class triangle{
-  attribute segment cote1;
-  attribute segment cote2;
-  attribute segment cote3;
-}
-
 main {
   p = new point;
-  
   p.x = 1;
   p.y = 2;
   s = new segment;
   s.a = p;
   s.b = new point;
   s.b.x = 3;
-
-  tri = new triangle;
-  tri.cote1 = s;
-  print(tri.cote1.b.x);
-  
-  
-  
   p = s.b;
-
   p.y = 4;
-  print(s.b.x);
   print(s.a.x + s.a.y + s.b.x + s.b.y);
-
-  if ( s === s){
-    print(74);
-  }
-  
+  // affiche 10
 }

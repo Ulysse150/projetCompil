@@ -4,20 +4,11 @@ var point b;
 class point {
   attribute int x;
   attribute int y;
-
-  
 }
 
 main {
   a = new point;
   b = new point;
-
-  if (true){
-
-  }else{
-    
-  }
-
   a.x = 1;
   a.y = 2;
   b.x = 3;
