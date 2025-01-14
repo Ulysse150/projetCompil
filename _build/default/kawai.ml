@@ -47,11 +47,11 @@ let () =
     else ();
     
     if (steps) then 
-    Printf.printf"Execution du programme...\n \n" else ();
+    Printf.printf"Interpretation du programme...\n \n" else ();
     Interpreter.exec_prog prog;
     
     if steps then 
-    Printf.printf"Programme execute avec succes...\n" else ();
+    Printf.printf"Interpretation executee avec succes...\n" else ();
     exit 0
   with
   | Kawalexer.Error s ->

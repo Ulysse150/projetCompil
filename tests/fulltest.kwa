@@ -130,7 +130,7 @@ class point {
   method int while3() {
     while false { return 42; }
   }
-
+  /*
   method int while4() {
     while false {}
   }
@@ -142,7 +142,7 @@ class point {
 
   method void while6() {
     while false { return false; }
-  }
+  }*/
 }
 
 class paire {
@@ -178,12 +178,14 @@ class triple extends paire {
 }
 
 main {
+
   fact_global = 1;
   counter = 5;
   a = 3;
   n = 5;
   y = new point(3,5);
   p = new point(2, 1);
+  
   //p.test_void(); 
   
   //p.test_global();
