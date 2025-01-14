@@ -1,1 +1,1 @@
-typechecker.ml: Hashtbl Kawa List Map Printf String
+typechecker.ml: Array Hashtbl Kawa List Map Printf String

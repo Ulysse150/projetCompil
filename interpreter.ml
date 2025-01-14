@@ -37,6 +37,10 @@ let hashToList hash =
 
   Hashtbl.fold (fun k d acc -> d::acc   ) hash [] 
 
+let getSome a = 
+  match a with 
+  | Some a -> a
+  | _ -> failwith"erreur sur some"
 
 let getParents className allClasses = 
   
@@ -195,6 +199,49 @@ let exec_prog (p: program): unit =
       | VObj o -> o
       | _ -> assert false
         
+    and eval_super t this f args = 
+      
+      let instance = copyObjet this in
+     
+      (* Évaluer les arguments de la méthode *)
+      let params = List.map eval args in 
+      (* Créer l'environnement local de la méthode *)
+      let locals = Hashtbl.create 16 in 
+      
+      Hashtbl.iter (fun k (s, t) -> Hashtbl.replace locals k (s, t)) lenv;
+      List.iter (fun (s, t) -> Hashtbl.replace locals s (t, Null)) f.locals;
+      (*let () = match this with
+      | Get(Var(str)) -> 
+      | _ -> Hashtbl.iter (fun k (s, t) -> Hashtbl.replace locals k (s, copyValue(t))) lenv;*)
+
+    
+      
+      let () = 
+      (* Ajouter l'objet actuel sous le nom "this" *)
+      Hashtbl.replace locals "this" (t, VObj(instance))in
+      (* Associer les paramètres évalués aux noms des arguments *)
+      let () = List.iter2 (fun (s, ty) v -> Hashtbl.replace locals s (ty, copyValue(v)) ) f.params params in
+
+      let locals_rec = Hashtbl.copy locals in
+     (* Avant l'appel de la méthode *)
+
+      let valR = 
+        try 
+          exec_seq f.code locals;
+          Null
+        with 
+        | Return v -> v
+      in
+
+
+      (* Mise à jour de l'objet this s'il a été modifié *)
+     
+      let updated_this = Hashtbl.find locals_rec "this" in
+      Hashtbl.replace lenv "this" updated_this;
+          
+      valR
+
+
     and eval_call f this args = 
       (* Évaluer l'objet sur lequel la méthode est appelée *)
       let instance =  copyObjet(evalo this) in
@@ -249,10 +296,6 @@ let exec_prog (p: program): unit =
           let updated_this = Hashtbl.find locals_rec "this" in
           Hashtbl.replace lenv str updated_this
           | None -> () in
-
-    
-
-     
       valR
 
     and eval (e: expr): value = match e with
@@ -311,7 +354,22 @@ let exec_prog (p: program): unit =
       | This-> (*On suppose que l'on est dans une methode*)
          snd(Hashtbl.find lenv "this")
       | Instof(e, t) -> VBool(eval_instof e t)
+      | Super(s, args) -> 
+        (*On considere qu on est dans une methode*)
+        
+        let this = snd(Hashtbl.find lenv "this") in 
+        let this = match this with 
+        | VObj o -> o
+        | _ -> failwith""
+        in
+        let clas = List.find (fun c -> c.class_name = this.cls) p.classes in 
+        let cl_sup = List.find (fun cl -> cl.class_name = getSome(clas.parent)) p.classes in
+        let f = List.find (fun m -> m.method_name = s) cl_sup.methods in
+       
+        eval_super (TClass(this.cls)) this f args
 
+
+        
     and eval_instof e t = match eval e with 
     | VInt n -> t = TInt
     | VBool b -> t = TBool

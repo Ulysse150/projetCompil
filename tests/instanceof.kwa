@@ -8,6 +8,11 @@ var cl2 ob2;
 var cl3 ob3;
 var cl4 ob4;
 var cl5 ob5;
+var int x;
+
+var int objet;
+var bool raphael;
+
 /*
 // Hola
 */
@@ -16,17 +21,38 @@ class cl1{
     attribute int x;
     attribute int y;
 
+
+    method void fonction(){
+        
+        print(2);
+    }
+
 }
 
 
 class cl2 extends cl1{
     attribute int j;
     attribute int z;
+
+    method void fonction(){
+        print(30);
+    }
+
+    method void appelSuper(){
+        super.fonction();
+    }
+
 }
 
 
 class cl3 extends cl2{
     attribute bool b;
+
+    method void constructor(bool d){
+        this.b = d;
+        super.fonction();
+    }
+
 }
 
 class cl4{
@@ -83,14 +109,17 @@ main{
     print(!(true instanceof cl3));
      print(!true instanceof cl3);
     
-    print(n1);
-    print(n2);
-    print(n3);
-
     ob5 = new cl5(2, 1);
+    ob1.fonction();
+    ob2.appelSuper();
+    ob3 = new cl3(true);
     
     
+    objet = 5;
+    raphael= true;
+    //ob1.fonctionne();
 
+    x = barbapapa;
     
 
 

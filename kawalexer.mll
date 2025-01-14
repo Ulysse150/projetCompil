@@ -27,6 +27,7 @@
       "while", WHILE;
       "instanceof", INSTOF;
       "extends", EXT;
+      "super",SUPER
       
     ] ;
   fun s ->

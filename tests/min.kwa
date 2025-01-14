@@ -1,3 +1,7 @@
+var int barbapapa;
+var int barbamama;
+var int x;
+
 main {
-  print(42);
+  x = barbapama;
 }

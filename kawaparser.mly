@@ -45,7 +45,7 @@
 %token STDIFF
 %token EXT 
 %token INSTOF
-
+%token SUPER
 
    (*       
 %left OR              
@@ -161,6 +161,8 @@ expression:
   | e=expression DOT id=IDENT LPAR params=param_del RPAR { MethCall(e, id, params) }
 
   | e =expression INSTOF id = typ {Instof(e, id)}
+  | SUPER DOT id=IDENT LPAR params=param_del RPAR{Super(id, params)}
+
 
 ;
 

@@ -75,6 +75,7 @@ type expr =
   (* Appel de méthode *)
   | MethCall of expr * string * expr list
   | Instof of expr * typ
+  | Super of string * expr list
   (*Instance of*)
 
 (* Accès mémoire : variable ou attribut d'un objet *)

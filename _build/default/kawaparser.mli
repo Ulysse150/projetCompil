@@ -10,6 +10,7 @@ type token =
   | VAR
   | TRUE
   | THIS
+  | SUPER
   | SUPEQ
   | SUP
   | STEQ

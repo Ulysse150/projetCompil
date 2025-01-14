@@ -86,13 +86,85 @@ let countF f list =
   in 
   aux list 0
 
+let minimum l = 
+  let rec aux l acc =
+    match l with 
+    | [] -> acc
+    | e::ll -> aux ll (if e < acc then e else acc)
+  in
+  aux l (List.hd(l))
+
 (*Renvoie un booleen si le type t est défini*)
 let typeExists t p = 
   match  t  with
   | "int"| "bool" -> true
   | s -> List.exists (fun cl -> cl.class_name = s) p.classes
 
+let init_matrix n m v =
+  Array.init n (fun _ -> Array.init m (fun _ -> v))
 
+let levenshtein s1 s2 =
+  (*Calcule la distance entre 2 strings s1 et s2*)
+  (*Inspire du pseudo code trouve sur wikipedia*)
+  let n1, n2 = String.length s1, String.length s2 in
+  let matrix = init_matrix (n1+1) (n2+1) 0 in
+  for i = 0 to n1 do
+    matrix.(i).(0) <- i ;
+  done;
+
+  for j = 0 to n2 do
+    matrix.(0).(j) <- j ;
+  done;
+
+  for i = 1 to n1 do 
+    for j = 1 to n2 do 
+
+      let cout = 
+        if s1.[i-1] = s2.[j-1] then 0
+        else 1
+      in
+      matrix.(i).(j) <- minimum(
+      [matrix.(i-1).(j) + 1;
+       matrix.(i).(j-1) + 1;
+       matrix.(i-1).(j-1) + cout
+      ]
+      )
+
+    done;
+  done;
+  matrix.(n1).(n2)
+
+let find_closest_id s strings =
+
+  let rec aux acc list =
+
+    match list with 
+    | [] -> acc
+    | str::ll -> if (levenshtein s str ) <= (levenshtein acc s) then 
+              aux str ll
+              else aux acc ll
+            in 
+  aux "" strings
+
+(*Prend une hashtable et renvoie la liste de f de tous ses cles valeur*)
+
+let transformHash hash  = 
+  Env.fold (fun k d acc -> k::acc) hash []
+
+
+
+let find_closest_var s tenv = 
+  let strings = transformHash tenv in 
+  find_closest_id s strings
+
+let find_closest_class s p= 
+find_closest_id s ("bool"::"int"::(List.map (fun cl -> cl.class_name) p.classes))
+
+let find_closest_type s p =
+  find_closest_id s ("bool"::"int"::(List.map (fun cl -> cl.class_name) p.classes))
+
+let find_closest_method m methods =
+  find_closest_id m (List.map (fun meth -> meth.method_name) methods)
 
 
 
@@ -122,7 +194,10 @@ let typecheck_prog p =
     | Binop(op, e1, e2) -> type_binop op e1 e2 tenv
 
     | Get m -> type_mem_access m tenv
-    | New s -> if (classExists s) then TClass(s) else failwith(Printf.sprintf"Class %s does not exist" s)
+    | New s -> if (classExists s) then TClass(s) else 
+      let closest = find_closest_class s p in
+      error(Printf.sprintf"Class %s does not exist, did you mean %s?" s closest)
+
     | NewCstr(s, l) -> typeCstr s l tenv
     | This -> (match Env.find_opt "this" tenv  with 
         | None -> failwith("Use of This outside of a class")
@@ -132,13 +207,52 @@ let typecheck_prog p =
         ignore (type_expr e tenv) ;
         (match t with 
         | TClass s -> if (typeExists s p) then 
-          TBool else error(Printf.sprintf"Erreur at instance of type %s is not defined" s)
+          TBool else error(Printf.sprintf"Erreur at instance, type %s is not defined. Did you mean %s?" s (find_closest_type s p))
         | _ -> TBool
+        )
+    | Super(s, exprs) -> 
+        (match Env.find_opt "this" tenv with 
+        | None -> error(Printf.sprintf"Use of super outside of method")
+        | Some this -> 
+          let classe = List.find (fun cl -> TClass(cl.class_name) = this) p.classes in 
+          let supClass = 
+          (match classe.parent with 
+            | None -> error(Printf.sprintf"Class %s has no super class" classe.class_name)
+            | Some str-> List.find (fun  cl -> cl.class_name = str) p.classes
+          )in
+          
+          let methodSup = 
+            (match List.find_opt (fun m -> m.method_name = s) supClass.methods with 
+              | None ->
+                let closest = find_closest_method s supClass.methods in
+                error(Printf.sprintf"Super Class has not a super method %s, did you mean %s?" s closest)
+              | Some m -> m
+            
+            ) in
+          (*On verifie que les parametres sont le bon nombre*)
+
+          if (List.length exprs) = (List.length methodSup.params) then 
+            begin
+            let () = List.iter2 (fun e (s, t) -> check e t tenv ) exprs methodSup.params in
+            methodSup.return
+            end
+          else
+            error(Printf.sprintf"%s has %d parameters not %d" methodSup.method_name (List.length methodSup.params) (List.length exprs))
+
+
         )
       
                       
 
-    
+  and checkParamsDecl params = 
+      let aux t = 
+        match t with 
+        | TClass s -> if classExists s then () else
+          let closest = find_closest_class s p in
+          error(Printf.sprintf"Type %s does not exist, did you mean %s?" s closest)
+        | _ -> ()
+      in
+      List.iter (fun (s, t) -> aux t) params
 
 
 
@@ -160,7 +274,9 @@ let typecheck_prog p =
     let classe = getClassByName s  in 
     (*On verifie que cette classe existe*)
     match classe with 
-    | None -> failwith(Printf.sprintf"Class %s does not exist" s)
+    | None -> let closest = find_closest_class s p in 
+    
+    error(Printf.sprintf"Class %s does not exist, did you mean %s?" s closest)
     | Some c -> (*On trouve le constructeur*)
         let constructeur = List.find_opt (fun f -> f.method_name = "constructor")
           c.methods in 
@@ -184,7 +300,8 @@ let typecheck_prog p =
 
     let cl =  TClass(mclass.class_name) in
     (*On ajoute this, les variables locales et les paramètres*)
-    
+    let () = checkParamsDecl mdef.params in
+
     let myEnv = add_env mdef.locals env in 
     let myEnv = add_env mdef.params myEnv in 
     let myEnv = Env.add "this" cl myEnv in
@@ -197,6 +314,7 @@ let typecheck_prog p =
       check_seq mdef.code mdef.return myEnv
         
   and check_class cl env = 
+      checkParamsDecl cl.attributes;
       List.iter (fun m -> check_mdef m cl env) cl.methods
 
 
@@ -213,7 +331,9 @@ let typecheck_prog p =
     let fonc = List.find_opt (fun f -> f.method_name = s)
     functions in 
   (match fonc with 
-  | None -> failwith(Printf.sprintf"Class %s does not have a function named %s" cl.class_name s)
+  | None -> 
+    let closest = find_closest_method s cl.methods in
+    failwith(Printf.sprintf"Class %s does not have a method named %s, did you mean %s?" cl.class_name s closest)
   (*On verifie qu il ya le bon nombre de parametres et que
             les valeurs mises en paramètres correspondent au type   *)
   | Some f -> if ((List.length l) = (List.length f.params))
@@ -229,7 +349,8 @@ let typecheck_prog p =
 
   and type_mem_access m tenv = match m with
     | Var v -> if Env.mem v tenv then Env.find v tenv else 
-      failwith (Printf.sprintf"Variable %s does not exist" v)
+      let closest = find_closest_var v tenv in
+      failwith (Printf.sprintf"Variable %s does not exist. Did you mean  %s ?" v closest)
     | Field(e, s) -> 
         let t = type_expr e tenv in (*Le type de la classe*)
 
@@ -249,7 +370,10 @@ let typecheck_prog p =
 
         match List.find_opt (fun (str, typ) -> str = s) att with 
         | Some (a, b) -> b
-        | None -> failwith(Printf.sprintf"Class %s does not have %s attribute\n" (typ_to_string t) s)
+        | None -> 
+          let atts = List.map (fun (a,b) -> a) cl.attributes in 
+          let closest = find_closest_id s atts in
+          failwith(Printf.sprintf"Class %s does not have %s attribute. Did you mean %s?\n" (typ_to_string t) s closest)
     
 
           
@@ -373,5 +497,6 @@ let typecheck_prog p =
     
   (* On verifie chaque*)
   List.iter (fun cl -> check_class cl tenv) p.classes;
+  checkParamsDecl p.globals;
   check_seq p.main TVoid tenv;
 
