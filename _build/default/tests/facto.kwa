@@ -110,7 +110,7 @@ class point {
 main {
   fact_global = 1;
   counter = 5;
-
+  
 
  
   n = 5;
@@ -140,7 +140,7 @@ main {
   //affiche 512
   n = p.test_instr_et_acces_globaux(n);
   print(n);
-
+    a = 5;
     print(a);
     print(5);
   //affiche 7

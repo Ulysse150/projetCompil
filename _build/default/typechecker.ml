@@ -106,7 +106,14 @@ let init_matrix n m v =
 let levenshtein s1 s2 =
   (*Calcule la distance entre 2 strings s1 et s2*)
   (*Inspire du pseudo code trouve sur wikipedia*)
+  
+
+
   let n1, n2 = String.length s1, String.length s2 in
+  (*On fait ca juste pour que l element vide ne soit pas renvoyé*)
+  if n1 = 0 then n2*n2 else
+  if n2 = 0 then n1*n1 else
+
   let matrix = init_matrix (n1+1) (n2+1) 0 in
   for i = 0 to n1 do
     matrix.(i).(0) <- i ;
@@ -350,7 +357,7 @@ let typecheck_prog p =
   and type_mem_access m tenv = match m with
     | Var v -> if Env.mem v tenv then Env.find v tenv else 
       let closest = find_closest_var v tenv in
-      failwith (Printf.sprintf"Variable %s does not exist. Did you mean  %s ?" v closest)
+      failwith (Printf.sprintf"Variable %s does not exist. Did you mean %s ?" v closest)
     | Field(e, s) -> 
         let t = type_expr e tenv in (*Le type de la classe*)
 

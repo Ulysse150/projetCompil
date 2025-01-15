@@ -1,34 +1,3 @@
-
-var int barbamama, x;
-var bool barbapapa;
-
-main {
-  x = barbapaxa + 1;
-}
-
-
-et
-
-
-var int barbapapa;
-var exemple x;
- 
-class exemple {
-  attribute int x, barbamama;
-
- method void test() {
-   this.barbapaxa = 1;
- } 
-} 
-
-main {
-  x = new exemple;
-  x.test();
-}
-
-
-et enfin
-
 var int barbapapa;
 var barbamama x;
 

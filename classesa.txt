@@ -1,0 +1,91 @@
+Classe barbamama : 
+
+Attributes : 
+barbamama : int
+
+No methods
+
+
+Classe serie : 
+
+Attributes : 
+l : int
+m : int
+n : int
+
+Methods : 
+ 
+test : () -> void
+somme : () -> int
+
+
+Classe rec1 : 
+
+Attributes : 
+x : rec1
+y : rec1
+
+No methods
+
+
+Classe rec2 : 
+
+Attributes : 
+x : rec1
+
+No methods
+
+
+Classe point : 
+
+Attributes : 
+x : int
+y : int
+
+Methods : 
+ 
+constructor : (int, int) -> void
+point : () -> void
+somme : () -> int
+test_instr_et_acces_globaux : int -> int
+test_locals : () -> int
+test_void : () -> void
+vvoid : () -> void
+fact : int -> int
+factTerminale : (int, int) -> int
+fact_globale : () -> void
+test_global : () -> void
+casif5 : () -> int
+casif6 : () -> int
+casif7 : () -> int
+casif8 : () -> int
+casif9 : () -> int
+casif10 : () -> int
+while1 : () -> int
+while2 : () -> int
+
+
+Classe paire : 
+
+Attributes : 
+x : int
+y : int
+
+Methods : 
+ 
+constructor : (int, int) -> void
+somme : () -> int
+
+
+Class triple extends paire :
+
+Attributes : 
+z : int
+
+Methods : 
+ 
+constructor : (int, int, int) -> void
+somme : () -> int
+produit : () -> int
+
+

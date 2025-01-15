@@ -45,11 +45,15 @@ let () =
     if steps then 
     Printf.printf"Typechecking du programme effectue avec succes\n\n"
     else ();
+
     
+   
+
+
     if (steps) then 
     Printf.printf"Interpretation du programme...\n \n" else ();
-    Interpreter.exec_prog prog;
-    
+    Interpreter.exec_prog prog (Array.mem "-env" Sys.argv) (Array.mem "-cl" Sys.argv) (Array.mem "-F" Sys.argv);
+
     if steps then 
     Printf.printf"Interpretation executee avec succes...\n" else ();
     exit 0

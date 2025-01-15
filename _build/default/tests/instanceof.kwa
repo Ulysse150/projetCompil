@@ -18,8 +18,7 @@ var bool raphael;
 */
 
 class cl1{
-    attribute int x;
-    attribute int y;
+    attribute int x,  y;
 
 
     method void fonction(){
@@ -70,6 +69,9 @@ class cl5 extends cl4{
 
     method void constructor(int x, int x){
         
+
+        var int a, b, c;
+
         this.v1 = x;
         this.v2 = x;
         this.afficher();
@@ -109,17 +111,22 @@ main{
     print(!(true instanceof cl3));
      print(!true instanceof cl3);
     
+
+    
     ob5 = new cl5(2, 1);
     ob1.fonction();
     ob2.appelSuper();
     ob3 = new cl3(true);
     
-    
-    objet = 5;
-    raphael= true;
-    //ob1.fonctionne();
+    /*Ces lignes sont à decommenter pour tester l amelioration de l'analyse
+    Le typechecker doit trouver les variables fonction et classe leur ressemblant le plus 
 
-    x = barbapapa;
+    */
+    // obje = 5;
+    //rapha= true;
+    //ob1.fonctionne();
+    //print(ob1.x1);
+    
     
 
 

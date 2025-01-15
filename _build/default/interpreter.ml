@@ -11,6 +11,53 @@ and obj = {
 }
 
 
+let rec printParams params = 
+  match params with 
+  |(s,t)::[] -> Printf.printf"%s" (typ_to_string t);
+  |(s, t)::ll ->Printf.printf"%s, " (typ_to_string t);printParams ll 
+  | [] -> ()
+
+
+let print_method m =
+  if (List.length m.params ) = 1 then 
+    begin
+    Printf.printf"%s : " m.method_name;
+    printParams m.params ;
+    Printf.printf" -> %s\n" (typ_to_string m.return)
+    end
+  else
+    begin
+    Printf.printf"%s : ("m.method_name;
+    printParams m.params;
+    Printf.printf") -> %s\n" (typ_to_string m.return)
+    end
+
+let print_class cl  = 
+  
+  let () = match cl.parent with 
+  | None -> Printf.printf"Classe %s : \n" cl.class_name
+  | Some s -> Printf.printf"Class %s extends %s :\n" cl.class_name s
+in
+  Printf.printf"\n";
+
+  match cl.attributes with 
+  | [] -> Printf.printf"No attributes.\n"
+  | l -> Printf.printf"Attributes : \n";List.iter (fun (s, t) -> Printf.printf"%s : %s\n" s (typ_to_string t)) l ;
+
+  Printf.printf"\n";
+  if (cl.methods = []) then 
+    Printf.printf"No methods\n"
+  
+  else
+  Printf.printf"Methods : \n \n";
+  
+  List.iter (fun m -> print_method m ) cl.methods;
+  Printf.printf"\n"
+
+let printClasses p =
+  List.iter (fun c -> print_class c; Printf.printf"\n") p.classes
+
+
 let copyObjet obj = 
   {cls = obj.cls; fields = Hashtbl.copy obj.fields}
 
@@ -18,8 +65,10 @@ let copyValue v = match v with
  | VObj o -> VObj (copyObjet o)
  | _ -> v
 
-
-
+let printEnv env = 
+  Printf.printf"Environnement global : \n";
+  Hashtbl.iter (fun var (t, v) -> Printf.printf"%s : %s\n" var (typ_to_string t)) env;
+  Printf.printf"\n"
 
 let getAttributes name env = 
  
@@ -52,6 +101,8 @@ let getParents className allClasses =
       parent::(aux parent )
   in
   aux (List.find (fun c -> c.class_name = className) allClasses)
+
+
 
 let getMethods class_name allClasses = 
   (*Renvoie une HashMap des methodes d'une classe *)
@@ -116,10 +167,20 @@ let print_variables env =
 
 
 
-let exec_prog (p: program): unit =
+let exec_prog (p: program) (affiche_env : bool ) (affiche_classe : bool) (stop : bool): unit =
   let env = Hashtbl.create 16 in
   
   List.iter (fun (id, typ) -> Hashtbl.add env id (typ, Null)) p.globals;
+
+  if affiche_env then printEnv env else();
+
+  if affiche_classe then printClasses p else ();
+
+  if stop then
+    ()
+  else
+
+
   let rec pow a n = 
     match n with
     | 0 -> 1
@@ -148,7 +209,7 @@ let exec_prog (p: program): unit =
       | VInt n1, VInt n2 -> v1 = v2 
       | VBool b1, VBool b2 -> b1 = b2 
       | VObj o1, VObj o2 -> aux o1.fields o2.fields
-      | _ , _ -> failwith"You cant compare 2 objects of different types"
+      | _  -> true
                 (*Ce failwith n apparaitra jamais si le typechecker est bien fait*)
       
     in
@@ -398,7 +459,7 @@ let exec_prog (p: program): unit =
             | VInt n1, VInt n2 -> n1 == n2 
             | VBool b1, VBool b2 -> b1 == b2
             | VObj o1, VObj o2 -> o1 == o2 
-            | _ -> failwith""
+            | _ -> true
           ))  
       
       | Neq -> VBool(( 
@@ -406,15 +467,15 @@ let exec_prog (p: program): unit =
         | VInt n1, VInt n2 -> n1 != n2 
         | VBool b1, VBool b2 -> b1 != b2
         | VObj o1, VObj o2 -> o1 != o2 
-        | _ -> failwith""
+        | _ -> false
       ))  
       
       (*Operateurs sur les booleens*)
       | And -> VBool((evalb e1) && (evalb e2))
       | Or  -> VBool((evalb e1) || (evalb e2))
        (*Egalite structurelle*)
-      | Stdiff -> VBool(stequals (eval e1) (eval e2))
-      | Steq -> VBool(stDiff (eval e1) (eval e2))
+      | Stdiff -> VBool(stDiff (eval e1) (eval e2))
+      | Steq -> VBool(stequals (eval e1) (eval e2))
 
     and eval_unop o e = 
       match o with 
@@ -442,7 +503,7 @@ let exec_prog (p: program): unit =
       | Print e -> (match (eval e ) with 
                 | VInt n-> Printf.printf"%d\n" n
                 | VBool b -> Printf.printf"%b\n" b
-                | _ -> failwith"Erreur typechecker"
+                | _ -> Printf.printf"null"
       )
       | Set(m, e) -> exec_set m e
       | If(cond, b1, b2) -> (
